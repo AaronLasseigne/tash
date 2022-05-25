@@ -9,6 +9,7 @@ class Nash
   class Error < StandardError; end
 
   extend Forwardable
+  include Enumerable
 
   KEY   = 0
   VALUE = 1
@@ -27,21 +28,32 @@ class Nash
     :length,
     :size
 
+  def [](key)
+    @internal.dig(normalize(key), VALUE)
+  end
+
+  def each
+    if block_given?
+      @internal.each do |normalized_key, internal_representation|
+        yield [internal_representation[KEY], internal_representation[VALUE], normalized_key]
+      end
+    else
+      to_enum(:each)
+    end
+  end
+  alias each_pair each
+
+  def inspect
+    to_hash.to_s
+  end
+
   def store(key, value)
     @internal[normalize(key)] = [key, value]
     value
   end
   alias []= store
 
-  def [](key)
-    @internal.dig(normalize(key), VALUE)
-  end
-
   def to_hash
     @internal.values.to_h
-  end
-
-  def inspect
-    to_hash.to_s
   end
 end

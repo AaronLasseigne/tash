@@ -2,6 +2,8 @@ module Nash
   VERSION: String
 
   class Nash[unchecked out K, unchecked out V] < Object
+    include Enumerable[[ K, V, K ]]
+
     def initialize: () { (K) -> unchecked out K } -> void
 
     def normalize: (K) -> unchecked out K
@@ -9,13 +11,17 @@ module Nash
     def length: () -> Integer
     alias size length
 
+    def []: (K) -> V
+
+    def each: () { ([ K, V, K ]) -> untyped } -> self
+            | () -> ::Enumerator[[ K, V, K ], self]
+    alias each_pair each
+
+    def inspect: () -> String
+
     def store: (K, V) -> V
     alias []= store
 
-    def []: (K) -> V
-
     def to_hash: () -> Hash[K, V]
-
-    def inspect: () -> String
   end
 end
