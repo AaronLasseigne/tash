@@ -6,6 +6,9 @@ module Nash
 
     def normalize: (K) -> unchecked out K
 
+    def length: () -> Integer
+    alias size length
+
     def store: (K, V) -> V
     alias []= store
 

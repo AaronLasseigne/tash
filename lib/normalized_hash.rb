@@ -1,10 +1,14 @@
 # frozen_string_literal: true
 
+require 'forwardable'
+
 require_relative 'normalized_hash/version'
 
 # A Nash is a hash with normalized keys.
 class Nash
   class Error < StandardError; end
+
+  extend Forwardable
 
   KEY   = 0
   VALUE = 1
@@ -18,6 +22,10 @@ class Nash
   def normalize(key)
     @normalization.call(key)
   end
+
+  def_delegators :@internal,
+    :length,
+    :size
 
   def store(key, value)
     @internal[normalize(key)] = [key, value]
