@@ -1,0 +1,7 @@
+module Nash
+  VERSION: String
+
+  class Nash
+    def initialize: () -> void
+  end
+end
