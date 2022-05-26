@@ -67,4 +67,8 @@ class Nash
   def to_hash
     @internal.values.to_h
   end
+
+  def values
+    @internal.values.map { |internal_representation| internal_representation[VALUE] }
+  end
 end

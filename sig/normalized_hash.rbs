@@ -30,5 +30,7 @@ module Nash
     alias []= store
 
     def to_hash: () -> Hash[K, V]
+
+    def values: () -> Array[V]
   end
 end

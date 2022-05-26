@@ -106,4 +106,13 @@ RSpec.describe Nash do
       expect(result).to be_kind_of Hash
     end
   end
+
+  describe '#values' do
+    it 'returns the value' do
+      nash[:ONE] = 1
+      nash[:Two] = 2
+
+      expect(nash.values).to eq [1, 2]
+    end
+  end
 end
