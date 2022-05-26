@@ -25,6 +25,7 @@ class Nash
   end
 
   def_delegators :@internal,
+    :clear,
     :length,
     :size
 

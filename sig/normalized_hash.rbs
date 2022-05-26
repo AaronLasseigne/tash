@@ -8,6 +8,8 @@ module Nash
 
     def normalize: (K) -> unchecked out K
 
+    def clear: () -> self
+
     def length: () -> Integer
     alias size length
 
