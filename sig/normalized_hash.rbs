@@ -24,6 +24,8 @@ module Nash
 
     def inspect: () -> String
 
+    def keys: () -> Array[K]
+
     def store: (K, V) -> V
     alias []= store
 

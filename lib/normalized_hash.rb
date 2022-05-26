@@ -54,6 +54,10 @@ class Nash
     to_hash.to_s
   end
 
+  def keys
+    @internal.values.map { |internal_representation| internal_representation[KEY] }
+  end
+
   def store(key, value)
     @internal[normalize(key)] = [key, value]
     value

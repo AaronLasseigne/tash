@@ -68,6 +68,15 @@ RSpec.describe Nash do
     end
   end
 
+  describe '#keys' do
+    it 'returns the original keys' do
+      nash[:ONE] = 1
+      nash[:Two] = 2
+
+      expect(nash.keys).to eq %i[ONE Two]
+    end
+  end
+
   describe '#store' do
     it 'sets a key' do
       nash.store(:one, 1)
