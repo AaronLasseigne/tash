@@ -43,6 +43,13 @@ class Nash
   end
   alias each_pair each
 
+  def has_key?(key) # rubocop:disable Naming/PredicateName
+    !!@internal.dig(normalize(key), KEY)
+  end
+  alias key? has_key?
+  alias include? has_key?
+  alias member? has_key?
+
   def inspect
     to_hash.to_s
   end

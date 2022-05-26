@@ -51,6 +51,14 @@ RSpec.describe Nash do
     end
   end
 
+  describe '#has_key?' do
+    it 'normalizes the key' do
+      nash[:ONE] = 1
+
+      expect(nash.has_key?(:one)).to be true # rubocop:disable Style/PreferredHashMethods
+    end
+  end
+
   describe '#inspect' do
     it 'displays like a regular hash using the original keys' do
       nash[:ONE] = 1

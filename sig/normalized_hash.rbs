@@ -17,6 +17,11 @@ module Nash
             | () -> ::Enumerator[[ K, V, K ], self]
     alias each_pair each
 
+    def has_key?: (K) -> bool
+    alias key? has_key?
+    alias include? has_key?
+    alias member? has_key?
+
     def inspect: () -> String
 
     def store: (K, V) -> V
