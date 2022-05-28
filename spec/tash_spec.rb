@@ -290,11 +290,11 @@ RSpec.describe Tash do
     end
   end
 
-  describe '#has_key?' do
+  describe '#key?' do
     it 'transforms the key' do
       tash[:A] = 1
 
-      expect(tash.has_key?(:a)).to be true # rubocop:disable Style/PreferredHashMethods
+      expect(tash.key?(:a)).to be true
     end
   end
 

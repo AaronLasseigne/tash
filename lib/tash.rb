@@ -87,12 +87,12 @@ class Tash
   end
   alias select filter
 
-  def has_key?(key) # rubocop:disable Naming/PredicateName
+  def key?(key)
     @ir.key?(transform(key))
   end
-  alias key? has_key?
-  alias include? has_key?
-  alias member? has_key?
+  alias has_key? key?
+  alias include? key?
+  alias member? key?
 
   def store(key, value)
     @ir.store(transform(key), value)
