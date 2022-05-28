@@ -54,12 +54,14 @@ class Nash
   def filter
     return to_enum(:filter) unless block_given?
 
-    @ir.each.with_object(self.class.new(&@normalization)) do |(normalized_key, data), acc|
+    filtered_ir = @ir.filter do |normalized_key, data|
       key = data[KEY]
       value = data[VALUE]
 
-      acc[key] = value if yield [key, value, normalized_key]
+      yield [key, value, normalized_key]
     end
+
+    self.class.new(&@normalization).tap { |nash| nash.ir = filtered_ir }
   end
   alias select filter
 
@@ -91,4 +93,8 @@ class Nash
   def values
     @ir.values.map { |data| data[VALUE] }
   end
+
+  protected
+
+  attr_writer :ir
 end
