@@ -197,15 +197,6 @@ RSpec.describe Nash do
     end
   end
 
-  describe '#inspect' do
-    it 'displays like a regular hash using the normalized keys' do
-      nash[:A] = 1
-      nash[:b] = 2
-
-      expect(nash.inspect).to eq '{:a=>1, :b=>2}'
-    end
-  end
-
   describe '#store' do
     it 'sets a key' do
       nash.store(:a, 1)
@@ -221,27 +212,6 @@ RSpec.describe Nash do
       nash.store(:A, 1)
 
       expect(nash[:a]).to be 1
-    end
-  end
-
-  describe '#to_hash' do
-    it 'returns a hash with the normalized keys' do
-      nash[:A] = 1
-      nash[:b] = 2
-
-      result = nash.to_hash
-
-      expect(result).to be_a_kind_of Hash
-      expect(result).to eql({ a: 1, b: 2 })
-    end
-  end
-
-  describe '#values' do
-    it 'returns the value' do
-      nash[:A] = 1
-      nash[:b] = 2
-
-      expect(nash.values).to eq [1, 2]
     end
   end
 end
