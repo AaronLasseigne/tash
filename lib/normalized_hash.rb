@@ -62,7 +62,7 @@ class Nash
       yield [key, value, normalized_key]
     end
 
-    self.class.new(&@normalization).tap { |nash| nash.ir = filtered_ir }
+    self.class.new(&@normalization).tap { |nash| nash.ir = filtered_ir.transform_values!(&:dup) }
   end
   alias select filter
 

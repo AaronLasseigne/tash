@@ -161,6 +161,18 @@ RSpec.describe Nash do
         expect(result).to be_a_kind_of described_class
         expect(result).to eq comparison
       end
+
+      it 'dups the IR data so the values are no longer tied together' do
+        nash[:A] = 1
+        nash[:b] = 2
+
+        result = nash.filter { |_k, v, _nk| v.even? }
+
+        nash[:b] = 3
+
+        expect(nash[:b]).to be 3
+        expect(result[:b]).to be 2
+      end
     end
   end
 
