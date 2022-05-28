@@ -53,11 +53,8 @@ class Tash
 
   def ==(other)
     return false unless other.is_a?(self.class)
-    return false unless size == other.size
 
-    other.all? do |k, v|
-      @ir.key?(k) && @ir[k] == v
-    end
+    @ir == other.to_hash
   end
 
   def [](key)
