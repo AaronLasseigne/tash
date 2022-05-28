@@ -3,6 +3,17 @@
 RSpec.describe Nash do
   subject(:nash) { described_class.new(&:downcase) }
 
+  describe '.new' do
+    context 'without a block' do
+      it 'operates like a Hash' do
+        nash = described_class.new
+        nash[:A] = 1
+
+        expect(nash[:A]).to be 1
+      end
+    end
+  end
+
   describe '#original_key' do
     it 'returns a normalized version of the key' do
       nash[:A] = 1
