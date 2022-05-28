@@ -13,6 +13,8 @@ module Nash
     def length: () -> Integer
     alias size length
 
+    def ==: (untyped other) -> bool
+
     def []: (K) -> V
 
     def each: () { ([ K, V, K ]) -> untyped } -> self

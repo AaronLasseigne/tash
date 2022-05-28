@@ -5,7 +5,82 @@ RSpec.describe Nash do
 
   describe '#normalize' do
     it 'returns a normalized version of the key' do
-      expect(nash.normalize(:One)).to be :one
+      expect(nash.normalize(:A)).to be :a
+    end
+  end
+
+  describe '#==' do
+    it "fails if the object is not a #{described_class}" do
+      expect(nash == 1).to be false
+    end
+
+    it 'fails if the normalized keys are different' do
+      nash1 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+        end
+      nash2 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:C] = 2
+        end
+
+      expect(nash1 == nash2).to be false
+    end
+
+    it 'fails if the values are different' do
+      nash1 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+        end
+      nash2 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 3
+        end
+
+      expect(nash1 == nash2).to be false
+    end
+
+    it 'fails if one is only a subset of the other' do
+      nash1 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+          n[:C] = 3
+        end
+      nash2 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+        end
+
+      expect(nash1 == nash2).to be false
+    end
+
+    it 'succeeds if it has the same normalized keys and values' do
+      nash1 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+        end
+      nash2 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:b] = 2
+          n[:a] = 1
+        end
+
+      expect(nash1 == nash2).to be true
     end
   end
 
@@ -53,64 +128,64 @@ RSpec.describe Nash do
 
   describe '#has_key?' do
     it 'normalizes the key' do
-      nash[:ONE] = 1
+      nash[:A] = 1
 
-      expect(nash.has_key?(:one)).to be true # rubocop:disable Style/PreferredHashMethods
+      expect(nash.has_key?(:a)).to be true # rubocop:disable Style/PreferredHashMethods
     end
   end
 
   describe '#inspect' do
     it 'displays like a regular hash using the original keys' do
-      nash[:ONE] = 1
-      nash[:Two] = 2
+      nash[:A] = 1
+      nash[:b] = 2
 
-      expect(nash.inspect).to eq '{:ONE=>1, :Two=>2}'
+      expect(nash.inspect).to eq '{:A=>1, :b=>2}'
     end
   end
 
   describe '#keys' do
     it 'returns the original keys' do
-      nash[:ONE] = 1
-      nash[:Two] = 2
+      nash[:A] = 1
+      nash[:b] = 2
 
-      expect(nash.keys).to eq %i[ONE Two]
+      expect(nash.keys).to eq %i[A b]
     end
   end
 
   describe '#store' do
     it 'sets a key' do
-      nash.store(:one, 1)
+      nash.store(:a, 1)
 
-      expect(nash[:one]).to be 1
+      expect(nash[:a]).to be 1
     end
 
     it 'returns the set value' do
-      expect(nash.store(:one, 1)).to be 1
+      expect(nash.store(:a, 1)).to be 1
     end
 
     it 'normalizes the key' do
-      nash.store(:ONE, 1)
+      nash.store(:A, 1)
 
-      expect(nash[:one]).to be 1
+      expect(nash[:a]).to be 1
     end
   end
 
   describe '#to_hash' do
     it 'returns a hash with the original keys' do
-      nash[:ONE] = 1
-      nash[:Two] = 2
+      nash[:A] = 1
+      nash[:b] = 2
 
       result = nash.to_hash
 
-      expect(result).to eql({ ONE: 1, Two: 2 })
+      expect(result).to eql({ A: 1, b: 2 })
       expect(result).to be_kind_of Hash
     end
   end
 
   describe '#values' do
     it 'returns the value' do
-      nash[:ONE] = 1
-      nash[:Two] = 2
+      nash[:A] = 1
+      nash[:b] = 2
 
       expect(nash.values).to eq [1, 2]
     end

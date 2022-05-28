@@ -17,26 +17,35 @@ class Nash
 
   def initialize(&block)
     @normalization = block
-    @internal = {}
+    @ir = {} # internal representation - @ir[normalized key] = [original key, value]
   end
 
   def normalize(key)
     @normalization.call(key)
   end
 
-  def_delegators :@internal,
+  def_delegators :@ir,
     :clear,
     :length,
     :size
 
+  def ==(other)
+    return false unless other.is_a?(self.class)
+    return false unless size == other.size
+
+    other.all? do |_k, v, nk|
+      @ir.key?(nk) && @ir[nk][VALUE] == v
+    end
+  end
+
   def [](key)
-    @internal.dig(normalize(key), VALUE)
+    @ir.dig(normalize(key), VALUE)
   end
 
   def each
     if block_given?
-      @internal.each do |normalized_key, internal_representation|
-        yield [internal_representation[KEY], internal_representation[VALUE], normalized_key]
+      @ir.each do |normalized_key, data|
+        yield [data[KEY], data[VALUE], normalized_key]
       end
     else
       to_enum(:each)
@@ -45,7 +54,7 @@ class Nash
   alias each_pair each
 
   def has_key?(key) # rubocop:disable Naming/PredicateName
-    !!@internal.dig(normalize(key), KEY)
+    !!@ir.dig(normalize(key), KEY)
   end
   alias key? has_key?
   alias include? has_key?
@@ -56,20 +65,20 @@ class Nash
   end
 
   def keys
-    @internal.values.map { |internal_representation| internal_representation[KEY] }
+    @ir.values.map { |data| data[KEY] }
   end
 
   def store(key, value)
-    @internal[normalize(key)] = [key, value]
+    @ir[normalize(key)] = [key, value]
     value
   end
   alias []= store
 
   def to_hash
-    @internal.values.to_h
+    @ir.values.to_h
   end
 
   def values
-    @internal.values.map { |internal_representation| internal_representation[VALUE] }
+    @ir.values.map { |data| data[VALUE] }
   end
 end
