@@ -3,6 +3,107 @@
 RSpec.describe Nash do
   subject(:nash) { described_class.new(&:downcase) }
 
+  describe '.[]' do
+    it 'fails if the number of inputs is odd' do
+      expect { described_class[:a] }.to raise_error(ArgumentError).with_message("odd number of arguments for #{described_class}")
+      expect { described_class[:a, 1, :b] }.to raise_error(ArgumentError).with_message("odd number of arguments for #{described_class}")
+    end
+
+    context 'without a block' do
+      it 'returns a new empty Nash' do
+        nash = described_class[]
+
+        expect(nash).to be_a_kind_of described_class
+        expect(nash.size).to be 0
+      end
+
+      context "with a #{described_class}" do
+        it "returns a #{described_class} containing the keys of the other class" do
+          nash[:A] = 1
+          nash[:b] = 2
+
+          nash2 = described_class[nash]
+
+          expect(nash2).to eq nash
+          expect(nash2).to_not be nash
+        end
+
+        it "copies over the normalization strategy from the provided #{described_class}" do
+          nash[:A] = 1
+          nash[:b] = 2
+
+          nash2 = described_class[nash]
+          nash2[:C] = 3
+
+          expect(nash2[:c]).to be 3
+        end
+      end
+
+      it 'works with a Hash' do
+        hash = { A: 1, b: 2 }
+
+        nash = described_class[hash]
+
+        expect(nash).to be_a_kind_of described_class
+        expect(nash[:A]).to be 1
+        expect(nash[:b]).to be 2
+        expect(nash.size).to be 2
+      end
+
+      it 'works with an even number of inputs' do
+        nash = described_class[:A, 1, :b, 2]
+
+        expect(nash).to be_a_kind_of described_class
+        expect(nash[:A]).to be 1
+        expect(nash[:b]).to be 2
+        expect(nash.size).to be 2
+      end
+    end
+
+    context 'with a block' do
+      it 'returns a new empty Nash' do
+        nash = described_class[&:downcase]
+
+        expect(nash).to be_a_kind_of described_class
+        expect(nash).to be_empty
+
+        nash[:ONE] = 1
+
+        expect(nash[:one]).to be 1
+      end
+
+      it "treats the #{described_class} like a Hash using to_hash" do
+        nash[:A] = 1
+        nash[:b] = 2
+
+        nash2 = described_class[nash, &:downcase]
+
+        expect(nash2[:a]).to be 1
+        expect(nash2[:b]).to be 2
+        expect(nash2.size).to be 2
+      end
+
+      it 'works with a Hash' do
+        hash = { A: 1, b: 2 }
+
+        nash = described_class[hash, &:downcase]
+
+        expect(nash[:a]).to be 1
+        expect(nash[:b]).to be 2
+        expect(nash.size).to be 2
+      end
+
+      it 'works with an even number of inputs' do
+        nash = described_class[:A, 1, :b, 2, &:downcase]
+
+        expect(nash).to be_a_kind_of described_class
+        expect(nash[:a]).to be 1
+        expect(nash[:b]).to be 2
+        expect(nash.size).to be 2
+      end
+    end
+  end
+
   describe '.new' do
     context 'without a block' do
       it 'operates like a Hash' do

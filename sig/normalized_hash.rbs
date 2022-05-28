@@ -4,6 +4,11 @@ module Nash
   class Nash[unchecked out K, unchecked out V] < Object
     include Enumerable[[ K, V ]]
 
+    def self.[]: [U, V] (Nash[U, V]) -> Nash[U, V]
+               | [U, V] (_ToHash[U, V]) { (U) -> unchecked out U } -> Nash[U, V]
+               | [U, V] (Array[[ U, V ]])  { (U) -> unchecked out U } -> Nash[U, V]
+               | (*untyped) { (U) -> unchecked out U } -> Nash[untyped, untyped]
+
     public
 
     def ==: (untyped other) -> bool

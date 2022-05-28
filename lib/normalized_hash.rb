@@ -11,8 +11,36 @@ class Nash
   extend Forwardable
   include Enumerable
 
-  def initialize(&block)
-    @normalization = block
+  def self.[](*objects, &normalization) # rubocop:disable Metrics/PerceivedComplexity
+    if objects.empty?
+      new(&normalization)
+    elsif objects.size == 1 && !normalization && objects.first.is_a?(self)
+      objects.first.dup
+    elsif objects.size == 1 && objects.first.respond_to?(:to_hash)
+      from_hash(objects.first.to_hash, &normalization)
+    elsif objects.size.even?
+      from_array(objects, &normalization)
+    else
+      raise ArgumentError, "odd number of arguments for #{name}"
+    end
+  end
+
+  def self.from_hash(hash, &normalization)
+    hash.each_with_object(new(&normalization)) do |(k, v), nash|
+      nash[k] = v
+    end
+  end
+  private_class_method :from_hash
+
+  def self.from_array(array, &normalization)
+    array.each_slice(2).with_object(new(&normalization)) do |(k, v), nash|
+      nash[k] = v
+    end
+  end
+  private_class_method :from_array
+
+  def initialize(&normalization)
+    @normalization = normalization
     @ir = {} # internal representation - @ir[normalized key] = value
   end
 
