@@ -4,7 +4,7 @@ module Nash
   class Nash[unchecked out K, unchecked out V] < Object
     include Enumerable[[ K, V, K ]]
 
-    def initialize: () { (K) -> unchecked out K } -> void
+    public
 
     def original_key: (K) -> unchecked out K
 
@@ -23,8 +23,8 @@ module Nash
             | () -> ::Enumerator[[ K, V, K ], self]
     alias each_pair each
 
-    def filter: () { (K, V, K) -> boolish } -> Hash[K, V]
-              | () -> Enumerator[[ K, V, K ], Hash[K, V]]
+    def filter: () { (K, V, K) -> boolish } -> Nash[K, V]
+              | () -> Enumerator[[ K, V, K ], Nash[K, V]]
     alias select filter
 
     def has_key?: (K) -> bool
@@ -40,5 +40,9 @@ module Nash
     def to_hash: () -> Hash[K, V]
 
     def values: () -> Array[V]
+
+    private
+
+    def initialize: () { (K) -> unchecked out K } -> void
   end
 end
