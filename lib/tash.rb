@@ -78,14 +78,14 @@ class Tash
   end
   alias each_pair each
 
-  def filter(&block)
-    return to_enum(:filter) unless block
+  def select(&block)
+    return to_enum(:select) unless block
 
-    filtered_ir = @ir.filter(&block)
+    selected_ir = @ir.select(&block)
 
-    self.class.new(&@transformation).tap { |tash| tash.ir = filtered_ir.dup }
+    self.class.new(&@transformation).tap { |tash| tash.ir = selected_ir.dup }
   end
-  alias select filter
+  alias filter select
 
   def key?(key)
     @ir.key?(transform(key))

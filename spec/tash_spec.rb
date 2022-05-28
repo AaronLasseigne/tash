@@ -253,22 +253,22 @@ RSpec.describe Tash do
     end
   end
 
-  describe '#filter' do
+  describe '#select' do
     context 'without a block' do
       it 'returns an enumerator' do
         tash[:A] = 1
         tash[:b] = 2
 
-        expect(tash.filter).to be_a_kind_of Enumerator
+        expect(tash.select).to be_a_kind_of Enumerator
       end
     end
 
     context 'with a block' do
-      it "filters the #{described_class} and returns a new one" do
+      it "select the #{described_class} and returns a new one" do
         tash[:A] = 1
         tash[:b] = 2
 
-        result = tash.filter { |_k, v| v.even? }
+        result = tash.select { |_k, v| v.even? }
         comparison = described_class.new(&:downcase)
         comparison[:b] = 2
 
@@ -280,7 +280,7 @@ RSpec.describe Tash do
         tash[:A] = 1
         tash[:b] = 2
 
-        result = tash.filter { |_k, v| v.even? }
+        result = tash.select { |_k, v| v.even? }
 
         tash[:b] = 3
 
