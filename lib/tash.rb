@@ -65,6 +65,11 @@ class Tash
     @ir[transform(key)]
   end
 
+  def []=(key, value)
+    @ir[transform(key)] = value
+  end
+  alias store []=
+
   def clear
     @ir.clear
     self
@@ -93,11 +98,6 @@ class Tash
   alias has_key? key?
   alias include? key?
   alias member? key?
-
-  def store(key, value)
-    @ir.store(transform(key), value)
-  end
-  alias []= store
 
   protected
 

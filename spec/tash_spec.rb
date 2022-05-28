@@ -204,6 +204,24 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#[]=' do
+    it 'sets a key' do
+      tash[:a] = 1
+
+      expect(tash[:a]).to be 1
+    end
+
+    it 'returns the set value' do
+      expect(tash[:a] = 1).to be 1
+    end
+
+    it 'transforms the key' do
+      tash[:A] = 1
+
+      expect(tash[:a]).to be 1
+    end
+  end
+
   describe '#clear' do
     it 'emptys the tash' do
       tash[:A] = 1
@@ -295,24 +313,6 @@ RSpec.describe Tash do
       tash[:A] = 1
 
       expect(tash.key?(:a)).to be true
-    end
-  end
-
-  describe '#store' do
-    it 'sets a key' do
-      tash.store(:a, 1)
-
-      expect(tash[:a]).to be 1
-    end
-
-    it 'returns the set value' do
-      expect(tash.store(:a, 1)).to be 1
-    end
-
-    it 'transforms the key' do
-      tash.store(:A, 1)
-
-      expect(tash[:a]).to be 1
     end
   end
 end
