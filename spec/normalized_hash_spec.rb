@@ -108,7 +108,7 @@ RSpec.describe Nash do
       nash[:A] = 1
       nash[:b] = 2
 
-      expect(nash.clear.size).to be 0
+      expect(nash.clear).to be_empty
     end
 
     it 'returns itself' do

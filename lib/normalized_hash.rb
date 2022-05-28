@@ -17,6 +17,7 @@ class Nash
   end
 
   def_delegators :@ir,
+    :empty?,
     :inspect,
     :keys,
     :length,

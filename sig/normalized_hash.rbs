@@ -6,34 +6,43 @@ module Nash
 
     public
 
-    def clear: () -> self
-
-    def keys: () -> Array[K]
-
-    def length: () -> Integer
-    alias size length
-
     def ==: (untyped other) -> bool
 
     def []: (K) -> V
 
+    alias []= store
+
+    def clear: () -> self
+
     def each: () { ([ K, V, K ]) -> untyped } -> self
             | () -> ::Enumerator[[ K, V, K ], self]
+
     alias each_pair each
+
+    def empty?: () -> bool
 
     def filter: () { (K, V, K) -> boolish } -> Nash[K, V]
               | () -> Enumerator[[ K, V, K ], Nash[K, V]]
-    alias select filter
 
     def has_key?: (K) -> bool
-    alias key? has_key?
+
     alias include? has_key?
-    alias member? has_key?
 
     def inspect: () -> String
 
+    alias key? has_key?
+
+    def keys: () -> Array[K]
+
+    def length: () -> Integer
+
+    alias member? has_key?
+
+    alias select filter
+
+    alias size length
+
     def store: (K, V) -> V
-    alias []= store
 
     def to_hash: () -> Hash[K, V]
 
