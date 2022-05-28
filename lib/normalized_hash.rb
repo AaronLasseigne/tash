@@ -17,7 +17,6 @@ class Nash
   end
 
   def_delegators :@ir,
-    :clear,
     :inspect,
     :keys,
     :length,
@@ -36,6 +35,11 @@ class Nash
 
   def [](key)
     @ir[normalize(key)]
+  end
+
+  def clear
+    @ir.clear
+    self
   end
 
   def each(&block)

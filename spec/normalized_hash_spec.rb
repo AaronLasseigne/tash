@@ -103,6 +103,19 @@ RSpec.describe Nash do
     end
   end
 
+  describe '#clear' do
+    it 'emptys the nash' do
+      nash[:A] = 1
+      nash[:b] = 2
+
+      expect(nash.clear.size).to be 0
+    end
+
+    it 'returns itself' do
+      expect(nash.clear).to be nash
+    end
+  end
+
   describe '#each' do
     context 'without a block' do
       it 'returns an enumerator' do
