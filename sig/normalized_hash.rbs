@@ -10,6 +10,8 @@ module Nash
 
     def clear: () -> self
 
+    def keys: () -> Array[K]
+
     def length: () -> Integer
     alias size length
 
@@ -31,8 +33,6 @@ module Nash
     alias member? has_key?
 
     def inspect: () -> String
-
-    def keys: () -> Array[K]
 
     def store: (K, V) -> V
     alias []= store

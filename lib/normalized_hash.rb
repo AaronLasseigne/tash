@@ -21,11 +21,14 @@ class Nash
   end
 
   def normalize(key)
+    return key unless @normalization
+
     @normalization.call(key)
   end
 
   def_delegators :@ir,
     :clear,
+    :keys,
     :length,
     :size
 
@@ -33,8 +36,8 @@ class Nash
     return false unless other.is_a?(self.class)
     return false unless size == other.size
 
-    other.all? do |_k, v, nk|
-      @ir.key?(nk) && @ir[nk][VALUE] == v
+    other.all? do |k, v|
+      @ir.key?(k) && @ir[k][VALUE] == v
     end
   end
 
@@ -46,7 +49,7 @@ class Nash
     return to_enum(:each) unless block_given?
 
     @ir.each do |normalized_key, data|
-      yield [data[KEY], data[VALUE], normalized_key]
+      yield [normalized_key, data[VALUE], data[KEY]]
     end
   end
   alias each_pair each
@@ -76,10 +79,6 @@ class Nash
     to_hash.to_s
   end
 
-  def keys
-    @ir.values.map { |data| data[KEY] }
-  end
-
   def store(key, value)
     @ir[normalize(key)] = [key, value]
     value
@@ -87,7 +86,7 @@ class Nash
   alias []= store
 
   def to_hash
-    @ir.values.to_h
+    @ir.transform_values { |data| data[VALUE] }
   end
 
   def values

@@ -101,26 +101,26 @@ RSpec.describe Nash do
   describe '#each' do
     context 'without a block' do
       it 'returns an enumerator' do
-        nash[:ONE] = 1
-        nash[:Two] = 2
+        nash[:A] = 1
+        nash[:b] = 2
 
         expect(nash.each).to be_a_kind_of Enumerator
       end
     end
 
     context 'with a block' do
-      it 'enumerates each original key, value, normalized key group' do
-        nash[:ONE] = 1
-        nash[:Two] = 2
+      it 'enumerates each normalized key, value, original key group' do
+        nash[:A] = 1
+        nash[:b] = 2
 
         output = []
-        nash.each do |k, v, nk|
-          output << [k, v, nk]
+        nash.each do |k, v, ok|
+          output << [k, v, ok]
         end
 
         expect(output).to eql [
-          [:ONE, 1, :one],
-          [:Two, 2, :two]
+          [:a, 1, :A],
+          [:b, 2, :b]
         ]
       end
     end
@@ -129,8 +129,8 @@ RSpec.describe Nash do
   describe '#filter' do
     context 'without a block' do
       it 'returns an enumerator' do
-        nash[:ONE] = 1
-        nash[:Two] = 2
+        nash[:A] = 1
+        nash[:b] = 2
 
         expect(nash.filter).to be_a_kind_of Enumerator
       end
@@ -138,12 +138,12 @@ RSpec.describe Nash do
 
     context 'with a block' do
       it "filters the #{described_class} and returns a new one" do
-        nash[:ONE] = 1
-        nash[:Two] = 2
+        nash[:A] = 1
+        nash[:b] = 2
 
         result = nash.filter { |_k, v, _nk| v.even? }
         comparison = described_class.new(&:downcase)
-        comparison[:Two] = 2
+        comparison[:b] = 2
 
         expect(result).to be_a_kind_of described_class
         expect(result).to eq comparison
@@ -160,20 +160,11 @@ RSpec.describe Nash do
   end
 
   describe '#inspect' do
-    it 'displays like a regular hash using the original keys' do
+    it 'displays like a regular hash using the normalized keys' do
       nash[:A] = 1
       nash[:b] = 2
 
-      expect(nash.inspect).to eq '{:A=>1, :b=>2}'
-    end
-  end
-
-  describe '#keys' do
-    it 'returns the original keys' do
-      nash[:A] = 1
-      nash[:b] = 2
-
-      expect(nash.keys).to eq %i[A b]
+      expect(nash.inspect).to eq '{:a=>1, :b=>2}'
     end
   end
 
@@ -196,14 +187,14 @@ RSpec.describe Nash do
   end
 
   describe '#to_hash' do
-    it 'returns a hash with the original keys' do
+    it 'returns a hash with the normalized keys' do
       nash[:A] = 1
       nash[:b] = 2
 
       result = nash.to_hash
 
-      expect(result).to eql({ A: 1, b: 2 })
       expect(result).to be_a_kind_of Hash
+      expect(result).to eql({ a: 1, b: 2 })
     end
   end
 
