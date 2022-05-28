@@ -14,14 +14,6 @@ RSpec.describe Nash do
     end
   end
 
-  describe '#original_key' do
-    it 'returns a normalized version of the key' do
-      nash[:A] = 1
-
-      expect(nash.original_key(:a)).to be :A
-    end
-  end
-
   describe '#==' do
     it "fails if the object is not a #{described_class}" do
       expect(nash == 1).to be false
@@ -122,19 +114,27 @@ RSpec.describe Nash do
     end
 
     context 'with a block' do
-      it 'enumerates each normalized key, value, original key group' do
+      it 'enumerates each key and value pair' do
         nash[:A] = 1
         nash[:b] = 2
 
         output = []
-        nash.each do |k, v, ok|
-          output << [k, v, ok]
+        nash.each do |k, v|
+          output << [k, v]
         end
 
         expect(output).to eql [
-          [:a, 1, :A],
-          [:b, 2, :b]
+          [:a, 1],
+          [:b, 2]
         ]
+      end
+
+      it 'returns itself' do
+        result = nash.each do |k, v|
+          # noop
+        end
+
+        expect(result).to be nash
       end
     end
   end
@@ -154,7 +154,7 @@ RSpec.describe Nash do
         nash[:A] = 1
         nash[:b] = 2
 
-        result = nash.filter { |_k, v, _nk| v.even? }
+        result = nash.filter { |_k, v| v.even? }
         comparison = described_class.new(&:downcase)
         comparison[:b] = 2
 
@@ -166,7 +166,7 @@ RSpec.describe Nash do
         nash[:A] = 1
         nash[:b] = 2
 
-        result = nash.filter { |_k, v, _nk| v.even? }
+        result = nash.filter { |_k, v| v.even? }
 
         nash[:b] = 3
 
@@ -208,14 +208,6 @@ RSpec.describe Nash do
       nash.store(:A, 1)
 
       expect(nash[:a]).to be 1
-    end
-
-    it 'maintains the first key given as the original' do
-      nash.store(:ONE, 1)
-      nash.store(:One, 2)
-
-      expect(nash[:one]).to be 2
-      expect(nash.original_key(:one)).to be :ONE
     end
   end
 

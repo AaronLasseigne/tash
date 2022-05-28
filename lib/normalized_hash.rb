@@ -11,91 +11,61 @@ class Nash
   extend Forwardable
   include Enumerable
 
-  KEY   = 0
-  VALUE = 1
-  private_constant :KEY, :VALUE
-
   def initialize(&block)
     @normalization = block
-    @ir = {} # internal representation - @ir[normalized key] = [original key, value]
-  end
-
-  def original_key(key)
-    @ir.dig(normalize(key), KEY)
+    @ir = {} # internal representation - @ir[normalized key] = value
   end
 
   def_delegators :@ir,
     :clear,
+    :inspect,
     :keys,
     :length,
-    :size
+    :size,
+    :to_hash,
+    :values
 
   def ==(other)
     return false unless other.is_a?(self.class)
     return false unless size == other.size
 
     other.all? do |k, v|
-      @ir.key?(k) && @ir[k][VALUE] == v
+      @ir.key?(k) && @ir[k] == v
     end
   end
 
   def [](key)
-    @ir.dig(normalize(key), VALUE)
+    @ir[normalize(key)]
   end
 
-  def each
-    return to_enum(:each) unless block_given?
+  def each(&block)
+    return to_enum(:each) unless block
 
-    @ir.each do |normalized_key, data|
-      yield [normalized_key, data[VALUE], data[KEY]]
-    end
+    @ir.each(&block)
+    self
   end
   alias each_pair each
 
-  def filter
-    return to_enum(:filter) unless block_given?
+  def filter(&block)
+    return to_enum(:filter) unless block
 
-    filtered_ir = @ir.filter do |normalized_key, data|
-      key = data[KEY]
-      value = data[VALUE]
+    filtered_ir = @ir.filter(&block)
 
-      yield [key, value, normalized_key]
-    end
-
-    self.class.new(&@normalization).tap { |nash| nash.ir = filtered_ir.transform_values!(&:dup) }
+    self.class.new(&@normalization).tap { |nash| nash.ir = filtered_ir.dup }
   end
   alias select filter
 
   def has_key?(key) # rubocop:disable Naming/PredicateName
-    !!@ir.dig(normalize(key), KEY)
+    @ir.key?(normalize(key))
   end
   alias key? has_key?
   alias include? has_key?
   alias member? has_key?
 
-  def inspect
-    to_hash.to_s
-  end
-
   def store(key, value)
-    normalized_key = normalize(key)
-
-    if @ir.key?(normalized_key)
-      @ir[normalized_key][VALUE] = value
-    else
-      @ir[normalized_key] = [key, value]
-    end
-    value
+    @ir.store(normalize(key), value)
   end
   alias []= store
-
-  def to_hash
-    @ir.transform_values { |data| data[VALUE] }
-  end
-
-  def values
-    @ir.values.map { |data| data[VALUE] }
-  end
 
   protected
 

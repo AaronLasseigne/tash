@@ -6,8 +6,6 @@ module Nash
 
     public
 
-    def original_key: (K) -> unchecked out K
-
     def clear: () -> self
 
     def keys: () -> Array[K]
