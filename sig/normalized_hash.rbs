@@ -2,7 +2,7 @@ module Nash
   VERSION: String
 
   class Nash[unchecked out K, unchecked out V] < Object
-    include Enumerable[[ K, V, K ]]
+    include Enumerable[[ K, V ]]
 
     public
 
@@ -14,15 +14,15 @@ module Nash
 
     def clear: () -> self
 
-    def each: () { ([ K, V, K ]) -> untyped } -> self
-            | () -> ::Enumerator[[ K, V, K ], self]
+    def each: () { ([ K, V ]) -> untyped } -> self
+            | () -> ::Enumerator[[ K, V ], self]
 
     alias each_pair each
 
     def empty?: () -> bool
 
-    def filter: () { (K, V, K) -> boolish } -> Nash[K, V]
-              | () -> Enumerator[[ K, V, K ], Nash[K, V]]
+    def filter: () { (K, V) -> boolish } -> Nash[K, V]
+              | () -> Enumerator[[ K, V ], Nash[K, V]]
 
     def has_key?: (K) -> bool
 
