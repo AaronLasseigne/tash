@@ -246,7 +246,7 @@ RSpec.describe Tash do
     end
 
     context 'with a block' do
-      it 'enumerates each key and value pair' do
+      it 'enumerates each key-value pair' do
         tash[:A] = 1
         tash[:b] = 2
 

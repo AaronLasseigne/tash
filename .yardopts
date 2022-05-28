@@ -1,0 +1,7 @@
+--markup markdown
+
+--no-private
+--readme README.md
+-
+CHANGELOG.md
+LICENSE.txt
