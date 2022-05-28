@@ -43,15 +43,25 @@ class Nash
   end
 
   def each
-    if block_given?
-      @ir.each do |normalized_key, data|
-        yield [data[KEY], data[VALUE], normalized_key]
-      end
-    else
-      to_enum(:each)
+    return to_enum(:each) unless block_given?
+
+    @ir.each do |normalized_key, data|
+      yield [data[KEY], data[VALUE], normalized_key]
     end
   end
   alias each_pair each
+
+  def filter
+    return to_enum(:filter) unless block_given?
+
+    @ir.each.with_object(self.class.new(&@normalization)) do |(normalized_key, data), acc|
+      key = data[KEY]
+      value = data[VALUE]
+
+      acc[key] = value if yield [key, value, normalized_key]
+    end
+  end
+  alias select filter
 
   def has_key?(key) # rubocop:disable Naming/PredicateName
     !!@ir.dig(normalize(key), KEY)

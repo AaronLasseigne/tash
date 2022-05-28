@@ -21,6 +21,10 @@ module Nash
             | () -> ::Enumerator[[ K, V, K ], self]
     alias each_pair each
 
+    def filter: () { (K, V, K) -> boolish } -> Hash[K, V]
+              | () -> Enumerator[[ K, V, K ], Hash[K, V]]
+    alias select filter
+
     def has_key?: (K) -> bool
     alias key? has_key?
     alias include? has_key?

@@ -104,7 +104,7 @@ RSpec.describe Nash do
         nash[:ONE] = 1
         nash[:Two] = 2
 
-        expect(nash.each).to be_kind_of Enumerator
+        expect(nash.each).to be_a_kind_of Enumerator
       end
     end
 
@@ -122,6 +122,31 @@ RSpec.describe Nash do
           [:ONE, 1, :one],
           [:Two, 2, :two]
         ]
+      end
+    end
+  end
+
+  describe '#filter' do
+    context 'without a block' do
+      it 'returns an enumerator' do
+        nash[:ONE] = 1
+        nash[:Two] = 2
+
+        expect(nash.filter).to be_a_kind_of Enumerator
+      end
+    end
+
+    context 'with a block' do
+      it "filters the #{described_class} and returns a new one" do
+        nash[:ONE] = 1
+        nash[:Two] = 2
+
+        result = nash.filter { |_k, v, _nk| v.even? }
+        comparison = described_class.new(&:downcase)
+        comparison[:Two] = 2
+
+        expect(result).to be_a_kind_of described_class
+        expect(result).to eq comparison
       end
     end
   end
@@ -178,7 +203,7 @@ RSpec.describe Nash do
       result = nash.to_hash
 
       expect(result).to eql({ A: 1, b: 2 })
-      expect(result).to be_kind_of Hash
+      expect(result).to be_a_kind_of Hash
     end
   end
 
