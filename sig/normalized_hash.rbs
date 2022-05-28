@@ -6,7 +6,7 @@ module Nash
 
     def initialize: () { (K) -> unchecked out K } -> void
 
-    def normalize: (K) -> unchecked out K
+    def original_key: (K) -> unchecked out K
 
     def clear: () -> self
 

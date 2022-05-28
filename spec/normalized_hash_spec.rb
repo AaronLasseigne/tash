@@ -3,9 +3,11 @@
 RSpec.describe Nash do
   subject(:nash) { described_class.new(&:downcase) }
 
-  describe '#normalize' do
+  describe '#original_key' do
     it 'returns a normalized version of the key' do
-      expect(nash.normalize(:A)).to be :a
+      nash[:A] = 1
+
+      expect(nash.original_key(:a)).to be :A
     end
   end
 
@@ -183,6 +185,14 @@ RSpec.describe Nash do
       nash.store(:A, 1)
 
       expect(nash[:a]).to be 1
+    end
+
+    it 'maintains the first key given as the original' do
+      nash.store(:ONE, 1)
+      nash.store(:One, 2)
+
+      expect(nash[:one]).to be 2
+      expect(nash.original_key(:one)).to be :ONE
     end
   end
 

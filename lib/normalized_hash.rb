@@ -20,10 +20,8 @@ class Nash
     @ir = {} # internal representation - @ir[normalized key] = [original key, value]
   end
 
-  def normalize(key)
-    return key unless @normalization
-
-    @normalization.call(key)
+  def original_key(key)
+    @ir.dig(normalize(key), KEY)
   end
 
   def_delegators :@ir,
@@ -80,7 +78,13 @@ class Nash
   end
 
   def store(key, value)
-    @ir[normalize(key)] = [key, value]
+    normalized_key = normalize(key)
+
+    if @ir.key?(normalized_key)
+      @ir[normalized_key][VALUE] = value
+    else
+      @ir[normalized_key] = [key, value]
+    end
     value
   end
   alias []= store
@@ -96,4 +100,12 @@ class Nash
   protected
 
   attr_writer :ir
+
+  private
+
+  def normalize(key)
+    return key unless @normalization
+
+    @normalization.call(key)
+  end
 end
