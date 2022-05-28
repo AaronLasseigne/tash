@@ -43,6 +43,10 @@ class Tash
   end
 
   def_delegators :@ir,
+    :<,
+    :<=,
+    :>,
+    :>=,
     :empty?,
     :inspect,
     :keys,
