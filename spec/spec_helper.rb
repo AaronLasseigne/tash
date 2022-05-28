@@ -1,4 +1,4 @@
-require 'normalized_hash'
+require 'tash'
 
 RSpec.configure do |config|
   config.expect_with :rspec do |expectations|

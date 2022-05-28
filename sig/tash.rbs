@@ -1,13 +1,13 @@
-module Nash
+module Tash
   VERSION: String
 
-  class Nash[unchecked out K, unchecked out V] < Object
+  class Tash[unchecked out K, unchecked out V] < Object
     include Enumerable[[ K, V ]]
 
-    def self.[]: [U, V] (Nash[U, V]) -> Nash[U, V]
-               | [U, V] (_ToHash[U, V]) { (U) -> unchecked out U } -> Nash[U, V]
-               | [U, V] (Array[[ U, V ]])  { (U) -> unchecked out U } -> Nash[U, V]
-               | (*untyped) { (U) -> unchecked out U } -> Nash[untyped, untyped]
+    def self.[]: [U, V] (Tash[U, V]) -> Tash[U, V]
+               | [U, V] (_ToHash[U, V]) { (U) -> unchecked out U } -> Tash[U, V]
+               | [U, V] (Array[[ U, V ]])  { (U) -> unchecked out U } -> Tash[U, V]
+               | (*untyped) { (U) -> unchecked out U } -> Tash[untyped, untyped]
 
     public
 
@@ -26,8 +26,8 @@ module Nash
 
     def empty?: () -> bool
 
-    def filter: () { (K, V) -> boolish } -> Nash[K, V]
-              | () -> Enumerator[[ K, V ], Nash[K, V]]
+    def filter: () { (K, V) -> boolish } -> Tash[K, V]
+              | () -> Enumerator[[ K, V ], Tash[K, V]]
 
     def has_key?: (K) -> bool
 

@@ -1,6 +1,6 @@
-# NormalizedHash
+# Tash
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/normalized_hash`. To experiment with that code, run `bin/console` for an interactive prompt.
+Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tash`. To experiment with that code, run `bin/console` for an interactive prompt.
 
 TODO: Delete this and the text above, and describe your gem
 
@@ -8,11 +8,11 @@ TODO: Delete this and the text above, and describe your gem
 
 Install the gem and add to the application's Gemfile by executing:
 
-    $ bundle add normalized_hash
+    $ bundle add tash
 
 If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install normalized_hash
+    $ gem install tash
 
 ## Usage
 
@@ -26,7 +26,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/AaronLasseigne/normalized_hash.
+Bug reports and pull requests are welcome on GitHub at https://github.com/AaronLasseigne/tash.
 
 ## License
 

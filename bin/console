@@ -2,7 +2,7 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'normalized_hash'
+require 'tash'
 
 require 'irb'
 IRB.start(__FILE__)
