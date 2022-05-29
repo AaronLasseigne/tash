@@ -5,8 +5,12 @@ RSpec.describe Tash do
 
   describe '.[]' do
     it 'fails if the number of inputs is odd' do
-      expect { described_class[:a] }.to raise_error(ArgumentError).with_message("odd number of arguments for #{described_class}")
-      expect { described_class[:a, 1, :b] }.to raise_error(ArgumentError).with_message("odd number of arguments for #{described_class}")
+      expect do
+        described_class[:a]
+      end.to raise_error(ArgumentError).with_message("odd number of arguments for #{described_class}")
+      expect do
+        described_class[:a, 1, :b]
+      end.to raise_error(ArgumentError).with_message("odd number of arguments for #{described_class}")
     end
 
     context 'without a block' do
@@ -219,6 +223,24 @@ RSpec.describe Tash do
       tash[:A] = 1
 
       expect(tash[:a]).to be 1
+    end
+  end
+
+  describe '#assoc' do
+    it 'returns nil if no key is found' do
+      expect(tash.assoc(:a)).to be_nil
+    end
+
+    it 'returns a key-value pair if the key is found' do
+      tash[:a] = 1
+
+      expect(tash.assoc(:a)).to eql [:a, 1]
+    end
+
+    it 'transforms the key' do
+      tash[:A] = 1
+
+      expect(tash.assoc(:a)).to eql [:a, 1]
     end
   end
 

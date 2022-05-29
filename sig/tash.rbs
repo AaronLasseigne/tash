@@ -25,6 +25,8 @@ module Tash
 
     def []=: (K, V) -> V
 
+    def assoc: (K) -> [ K, V ]?
+
     def clear: () -> self
 
     def each: () { ([ K, V ]) -> untyped } -> self

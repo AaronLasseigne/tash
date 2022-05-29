@@ -204,6 +204,15 @@ class Tash
   end
   alias store []=
 
+  # If the given transformed `key` is found, returns a 2-element Array
+  # containing that key and its value. Returns `nil` if the tranformed key
+  # `key` is not found.
+  #
+  # @return [Array<K,V> or nil]
+  def assoc(key)
+    @ir.assoc(transform(key))
+  end
+
   # Removes all tash entries.
   #
   # @return [self]
