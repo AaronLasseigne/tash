@@ -23,7 +23,7 @@ module Tash
 
     def []: (K) -> V
 
-    alias []= store
+    def []=: (K, V) -> V
 
     def clear: () -> self
 
@@ -34,8 +34,7 @@ module Tash
 
     def empty?: () -> bool
 
-    def filter: () { (K, V) -> boolish } -> Tash[K, V]
-              | () -> Enumerator[[ K, V ], Tash[K, V]]
+    alias select filter
 
     def has_key?: (K) -> bool
 
@@ -51,11 +50,12 @@ module Tash
 
     alias member? has_key?
 
-    alias select filter
+    def select: () { (K, V) -> boolish } -> Tash[K, V]
+              | () -> Enumerator[[ K, V ], Tash[K, V]]
 
     alias size length
 
-    def store: (K, V) -> V
+    alias store []=
 
     def to_hash: () -> Hash[K, V]
 
