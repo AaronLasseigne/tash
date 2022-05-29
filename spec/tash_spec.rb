@@ -71,9 +71,9 @@ RSpec.describe Tash do
         expect(tash).to be_a_kind_of described_class
         expect(tash).to be_empty
 
-        tash[:ONE] = 1
+        tash[:A] = 1
 
-        expect(tash[:one]).to be 1
+        expect(tash[:a]).to be 1
       end
 
       it "treats the #{described_class} like a Hash using to_hash" do
@@ -257,6 +257,19 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#compact' do
+    it 'removes keys with nil values' do
+      tash[:A] = 1
+      tash[:b] = nil
+
+      result = tash.compact
+      comparison = described_class[a: 1]
+
+      expect(result).to be_a_kind_of described_class
+      expect(result).to eq comparison
+    end
+  end
+
   describe '#each' do
     context 'without a block' do
       it 'returns an enumerator' do
@@ -309,23 +322,10 @@ RSpec.describe Tash do
         tash[:b] = 2
 
         result = tash.select { |_k, v| v.even? }
-        comparison = described_class.new(&:downcase)
-        comparison[:b] = 2
+        comparison = described_class[b: 2]
 
         expect(result).to be_a_kind_of described_class
         expect(result).to eq comparison
-      end
-
-      it 'dups the IR data so the values are no longer tied together' do
-        tash[:A] = 1
-        tash[:b] = 2
-
-        result = tash.select { |_k, v| v.even? }
-
-        tash[:b] = 3
-
-        expect(tash[:b]).to be 3
-        expect(result[:b]).to be 2
       end
     end
   end

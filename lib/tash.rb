@@ -221,6 +221,18 @@ class Tash
     self
   end
 
+  # Returns a copy of `self` with all `nil`-valued entries removed.
+  #
+  # @example
+  #   t = Tash[foo: 0, bar: nil, baz: 2, bat: nil]
+  #   t1 = t.compact
+  #   t1 # => {:foo=>0, :baz=>2}
+  #
+  # @return [Tash]
+  def compact
+    new_from_self(@ir.compact)
+  end
+
   # Calls the given block with each key-value pair. Returns a new Enumerator if
   # no block is given.
   #
@@ -268,9 +280,7 @@ class Tash
   def select(&block)
     return to_enum(:select) unless block
 
-    selected_ir = @ir.select(&block)
-
-    self.class.new(&@transformation).tap { |tash| tash.ir = selected_ir.dup }
+    new_from_self(@ir.select(&block).dup)
   end
   alias filter select
 
@@ -342,5 +352,9 @@ class Tash
     return key unless @transformation
 
     @transformation.call(key)
+  end
+
+  def new_from_self(new_ir)
+    self.class.new(&@transformation).tap { |tash| tash.ir = new_ir }
   end
 end
