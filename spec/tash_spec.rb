@@ -263,10 +263,25 @@ RSpec.describe Tash do
       tash[:b] = nil
 
       result = tash.compact
-      comparison = described_class[a: 1]
 
       expect(result).to be_a_kind_of described_class
-      expect(result).to eq comparison
+      expect(result).to eq described_class[a: 1]
+    end
+  end
+
+  describe '#compact!' do
+    it 'returns self if compaction occurred' do
+      tash[:A] = 1
+      tash[:b] = nil
+
+      expect(tash.compact!).to eq described_class[a: 1]
+    end
+
+    it 'returns nil if compaction did not occur' do
+      tash[:A] = 1
+      tash[:b] = 2
+
+      expect(tash.compact!).to be_nil
     end
   end
 
@@ -322,10 +337,9 @@ RSpec.describe Tash do
         tash[:b] = 2
 
         result = tash.select { |_k, v| v.even? }
-        comparison = described_class[b: 2]
 
         expect(result).to be_a_kind_of described_class
-        expect(result).to eq comparison
+        expect(result).to eq described_class[b: 2]
       end
     end
   end

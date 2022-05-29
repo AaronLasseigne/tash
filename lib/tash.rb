@@ -233,6 +233,17 @@ class Tash
     new_from_self(@ir.compact)
   end
 
+  # Returns `self` with all its `nil`-valued entries removed.
+  #
+  # @example
+  #   t = Tash[foo: 0, bar: nil, baz: 2, bat: nil]
+  #   t.compact! # => {:foo=>0, :baz=>2}
+  #
+  # @return [self or nil]
+  def compact!
+    self if @ir.compact!
+  end
+
   # Calls the given block with each key-value pair. Returns a new Enumerator if
   # no block is given.
   #
