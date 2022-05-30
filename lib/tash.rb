@@ -244,6 +244,32 @@ class Tash
     self if @ir.compact!
   end
 
+  # Deletes the entry for the given transformed `key` and returns its
+  # associated value.
+  #
+  # @param key
+  #
+  # @example
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.delete(:bar) # => 1
+  #   t.delete(:bar) # => nil
+  #   t # => {:foo=>0, :baz=>2}
+  #
+  # @example With a block and a `key` found.
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.delete(:baz) { |key| raise 'Will never happen'} # => 2
+  #   t # => {:foo=>0, :bar=>1}
+  #
+  # @example With a block and no `key` found.
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.delete(:nosuch) { |key| "Key #{key} not found" } # => "Key nosuch not found"
+  #   t # => {:foo=>0, :bar=>1, :baz=>2}
+  #
+  # @return [value or nil, Object]
+  def delete(key, &block)
+    @ir.delete(transform(key), &block)
+  end
+
   # Calls the given block with each key-value pair. Returns a new Enumerator if
   # no block is given.
   #

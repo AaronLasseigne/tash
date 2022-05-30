@@ -33,6 +33,9 @@ module Tash
 
     def compact!: () -> self?
 
+    def delete: (K) -> V?
+              | [U] (K) { (K) -> U } -> (U | V)
+
     def each: () { ([ K, V ]) -> untyped } -> self
             | () -> ::Enumerator[[ K, V ], self]
 

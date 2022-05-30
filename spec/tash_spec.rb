@@ -285,12 +285,39 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#delete' do
+    context 'without a block' do
+      it 'returns the value related to the transformed key if found' do
+        tash[:A] = 1
+
+        expect(tash.delete(:a)).to be 1
+      end
+
+      it 'returns nil if the key is not found' do
+        expect(tash.delete(:does_not_exist)).to be_nil
+      end
+    end
+
+    context 'with a block' do
+      it 'provides the transformed key to the block' do
+        expect(tash.delete(:DOES_NOT_EXIST) { |k| k == :does_not_exist }).to be true
+      end
+
+      it 'returns the value related to the transformed key if found' do
+        tash[:A] = 1
+
+        expect(tash.delete(:a) { 2 }).to be 1
+      end
+
+      it 'returns the value of the block if the transformed key is not found' do
+        expect(tash.delete(:does_not_exist) { 1 }).to be 1
+      end
+    end
+  end
+
   describe '#each' do
     context 'without a block' do
       it 'returns an enumerator' do
-        tash[:A] = 1
-        tash[:b] = 2
-
         expect(tash.each).to be_a_kind_of Enumerator
       end
     end
