@@ -248,6 +248,7 @@ class Tash
   # associated value.
   #
   # @param key
+  # @param block [Proc] receives a transformed key
   #
   # @example
   #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
