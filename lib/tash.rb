@@ -302,25 +302,6 @@ class Tash
   #
   #   @return [true or false]
 
-  # Returns a new Tash object whose entries are those for which the block
-  # returns a truthy value. Returns a new Enumerator if no block given.
-  #
-  # @example Without block
-  #   t = Tash[foo: 0, bar: 1, baz: 2]
-  #   e = t.select # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:select>
-  #
-  # @example With block
-  #   t = Tash[foo: 0, bar: 1, baz: 2]
-  #   t.select {|key, value| value < 2 } # => {:foo=>0, :bar=>1}
-  #
-  # @return [Enumerator, Tash]
-  def select(&block)
-    return to_enum(:select) unless block
-
-    new_from_self(@ir.select(&block).dup)
-  end
-  alias filter select
-
   # @!method inspect
   #   Returns a new String containing the tash entries.
   #
@@ -356,6 +337,25 @@ class Tash
   #     t.keys # => [:foo, :bar, :baz]
   #
   #   @return [Array]
+
+  # Returns a new Tash object whose entries are those for which the block
+  # returns a truthy value. Returns a new Enumerator if no block given.
+  #
+  # @example Without block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   e = t.select # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:select>
+  #
+  # @example With block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.select {|key, value| value < 2 } # => {:foo=>0, :bar=>1}
+  #
+  # @return [Enumerator, Tash]
+  def select(&block)
+    return to_enum(:select) unless block
+
+    new_from_self(@ir.select(&block).dup)
+  end
+  alias filter select
 
   # @!method size
   #   Returns the count of entries in `self`.
