@@ -520,7 +520,7 @@ class Tash
   def select(&block)
     return to_enum(:select) unless block
 
-    new_from_self(@ir.select(&block).dup)
+    new_from_self(@ir.select(&block))
   end
   alias filter select
 
