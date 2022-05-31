@@ -348,6 +348,60 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#fetch' do
+    it 'throws an error if passed too many args' do
+      expect { tash.fetch(:does_not_exist, 1, 2) }.to raise_error ArgumentError
+    end
+
+    context 'without a block' do
+      it 'fetches the value for the transformed key' do
+        tash[:A] = 1
+
+        expect(tash.fetch(:a)).to be 1
+      end
+
+      it 'throws a KeyError if the transformed key does not exist' do
+        expect { tash.fetch(:does_not_exist) }.to raise_error KeyError
+      end
+
+      context 'with a defaul_value' do
+        it 'returns knows keys' do
+          tash[:A] = 1
+
+          expect(tash.fetch(:a, 2)).to be 1
+        end
+
+        it 'uses the default_value if the key does not exist' do
+          expect(tash.fetch(:does_not_exist, 1)).to be 1
+        end
+      end
+    end
+
+    context 'with a block' do
+      it 'provides the transformed key to the block' do
+        expect(tash.fetch(:DOES_NOT_EXIST) { |k| k == :does_not_exist }).to be true
+      end
+
+      it 'fetches the value for the transformed key' do
+        tash[:A] = 1
+
+        expect(tash.fetch(:a) { |k| k }).to be 1
+      end
+
+      it 'overrides a default value' do
+        expect(tash.fetch(:does_not_exist, 1) { 2 }).to be 2
+      end
+    end
+  end
+
+  describe '#key?' do
+    it 'transforms the key' do
+      tash[:A] = 1
+
+      expect(tash.key?(:a)).to be true
+    end
+  end
+
   describe '#select' do
     context 'without a block' do
       it 'returns an enumerator' do
@@ -368,14 +422,6 @@ RSpec.describe Tash do
         expect(result).to be_a_kind_of described_class
         expect(result).to eq described_class[b: 2]
       end
-    end
-  end
-
-  describe '#key?' do
-    it 'transforms the key' do
-      tash[:A] = 1
-
-      expect(tash.key?(:a)).to be true
     end
   end
 end

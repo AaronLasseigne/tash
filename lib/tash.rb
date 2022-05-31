@@ -247,7 +247,7 @@ class Tash
   # Deletes the entry for the given transformed `key` and returns its
   # associated value.
   #
-  # @param key
+  # @param key [Object]
   # @param block [Proc] receives a transformed key
   #
   # @example
@@ -302,6 +302,33 @@ class Tash
   #     Tash[foo: 0, bar: 1, baz: 2].empty? # => false
   #
   #   @return [true or false]
+
+  # @overload fetch(key)
+  # @overload fetch(key, default_value)
+  #
+  # Returns the value for the given `key`, if found. Raises `KeyError` if
+  # neither `default_value` nor a block was given.
+  #
+  # @param key [Object]
+  # @param default_value [Object]
+  # @param block [Proc] receives a transformed `key`
+  #
+  # @example
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.fetch(:bar) # => 1
+  #
+  # @example With a default
+  #   Tash.new.fetch(:nosuch, :default) # => :default
+  #
+  # @example With a default block
+  #   Tash.new.fetch(:NOSUCH) {|key| "No key #{key}"} # => "No key nosuch"
+  #
+  # @raise [KeyError] When `key` is not found and no default is provided.
+  #
+  # @return [Object]
+  def fetch(key, *default_value, &block)
+    @ir.fetch(transform(key), *default_value, &block)
+  end
 
   # @!method inspect
   #   Returns a new String containing the tash entries.

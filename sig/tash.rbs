@@ -43,6 +43,10 @@ module Tash
 
     def empty?: () -> bool
 
+    def fetch: (K) -> V
+             | [X] (K, X) -> (V | X)
+             | [X] (K) { (K) -> X } -> (V | X)
+
     alias select filter
 
     def has_key?: (K) -> bool
