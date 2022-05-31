@@ -84,6 +84,8 @@ module Tash
 
     def to_hash: () -> Hash[K, V]
 
+    def transform_proc: () -> (Proc | nil)
+
     def values: () -> Array[V]
 
     private

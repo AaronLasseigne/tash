@@ -558,4 +558,17 @@ RSpec.describe Tash do
       end
     end
   end
+
+  describe '#transform_proc' do
+    it 'returns nil when there is none' do
+      expect(described_class.new.transform_proc).to be_nil
+    end
+
+    it 'returns the proc when there is one' do
+      prok = proc { |k| k.to_s }
+      tash = described_class.new(&prok)
+
+      expect(tash.transform_proc).to be prok
+    end
+  end
 end

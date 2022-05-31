@@ -537,6 +537,20 @@ class Tash
   #
   #   @return [Hash]
 
+  # Returns the transform proc for `self`.
+  #
+  # @example
+  #   t = Tash.new
+  #   t.transform_proc # => nil
+  #   t = Tash.new(&:to_s)
+  #   t.transform_proc.class # => Proc
+  #   t.transform_proc.call(:a) # => "a"
+  #
+  # @return [Proc or nil]
+  def transform_proc
+    @transformation
+  end
+
   # @!method values
   #   Returns a new Array containing all values in `self`.
   #
