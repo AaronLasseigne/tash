@@ -59,15 +59,15 @@ module Tash
              | [X] (K, X) -> (V | X)
              | [X] (K) { (K) -> X } -> (V | X)
 
-    alias select filter
+    alias filter select
 
-    def has_key?: (K) -> bool
+    alias has_key? key?
 
     alias include? has_key?
 
     def inspect: () -> String
 
-    alias key? has_key?
+    def key?: (K) -> bool
 
     def keys: () -> Array[K]
 
