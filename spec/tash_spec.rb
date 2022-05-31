@@ -354,6 +354,26 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#dig' do
+    it 'returns the value if the transformed key is found' do
+      tash[:Foo] = described_class[Bar: 2, &:downcase]
+
+      expect(tash.dig(:foo, :bar)).to be 2
+    end
+
+    it 'returns nil if no transformed key is found' do
+      tash[:Foo] = described_class[Bar: 2, &:downcase]
+
+      expect(tash.dig(:foo, :baz)).to be_nil
+    end
+
+    it 'calls into other objects that accept dig' do
+      tash[:foo] = %i[a b c]
+
+      expect(tash.dig(:foo, 2)).to be :c
+    end
+  end
+
   describe '#each' do
     context 'without a block' do
       it 'returns an enumerator' do

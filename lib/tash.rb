@@ -353,6 +353,36 @@ class Tash
     @ir.delete(transform(key), &block)
   end
 
+  # Finds and returns the object in nested objects that is specified by
+  # transformed `key` and `identifiers`. The nested objects may be instances of
+  # various classes. This method will use the default values for keys that are
+  # not present.
+  #
+  # @param key [Object]
+  # @param *identifiers [Object]
+  #
+  # @example Nested Tashes
+  #   t = Tash[Foo: Tash[Bar: 2, &:downcase], &:downcase]
+  #   t.dig(:foo) # => {:bar=>2}
+  #   t.dig(:foo, :bar) # => 2
+  #   t.dig(:foo, :bar, :BAZ) # => nil
+  #
+  # @example Nested Arrays
+  #   t = Tash[foo: [:a, :b, :c]]
+  #   t.dig(:foo, 2) # => :c
+  #
+  # @example Default values
+  #   t = Tash[foo: Tash[bar: [:a, :b, :c]]]
+  #   t.dig(:hello) # => nil
+  #   t.default_proc = -> (tash, _key) { tash }
+  #   t.dig(:hello, :world) # => t
+  #   t.dig(:hello, :world, :foo, :bar, 2) # => :c
+  #
+  # @return [Object]
+  def dig(key, *identifiers)
+    @ir.dig(transform(key), *identifiers)
+  end
+
   # Calls the given block with each key-value pair. Returns a new Enumerator if
   # no block is given.
   #

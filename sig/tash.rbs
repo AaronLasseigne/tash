@@ -44,6 +44,8 @@ module Tash
     def delete: (K) -> V?
               | [U] (K) { (K) -> U } -> (U | V)
 
+    def dig: (K, *untyped) -> untyped
+
     def each: () { ([ K, V ]) -> untyped } -> self
             | () -> ::Enumerator[[ K, V ], self]
 
