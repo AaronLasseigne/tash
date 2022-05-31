@@ -186,8 +186,8 @@ RSpec.describe Tash do
       tash2 = described_class
         .new(&:downcase)
         .tap do |n|
-          n[:b] = 2
-          n[:a] = 1
+          n[:b] = 2.0
+          n[:a] = 1.0
         end
 
       expect(tash1 == tash2).to be true
@@ -404,6 +404,81 @@ RSpec.describe Tash do
 
         expect(result).to be tash
       end
+    end
+  end
+
+  describe '#eql?' do
+    it "fails if the object is not a #{described_class}" do
+      expect(tash.eql?(1)).to be false
+    end
+
+    it 'fails if the keys are different' do
+      tash1 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+        end
+      tash2 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:C] = 2
+        end
+
+      expect(tash1.eql?(tash2)).to be false
+    end
+
+    it 'fails if the values are different' do
+      tash1 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+        end
+      tash2 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 3
+        end
+
+      expect(tash1.eql?(tash2)).to be false
+    end
+
+    it 'fails if one is only a subset of the other' do
+      tash1 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+          n[:C] = 3
+        end
+      tash2 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+        end
+
+      expect(tash1.eql?(tash2)).to be false
+    end
+
+    it 'succeeds if it has the same keys and values' do
+      tash1 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:A] = 1
+          n[:B] = 2
+        end
+      tash2 = described_class
+        .new(&:downcase)
+        .tap do |n|
+          n[:b] = 2
+          n[:a] = 1
+        end
+
+      expect(tash1.eql?(tash2)).to be true
     end
   end
 

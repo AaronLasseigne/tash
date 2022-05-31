@@ -126,7 +126,7 @@ class Tash
   #
   # Otherwise, returns `false`.
   #
-  # @param other [Tash, Hash]
+  # @param other [Object]
   #
   # @example
   #   t1 = Tash[foo: 0, bar: 1, baz: 2]
@@ -414,6 +414,30 @@ class Tash
   #     Tash[foo: 0, bar: 1, baz: 2].empty? # => false
   #
   #   @return [true or false]
+
+  # Returns `true` if all of the following are true:
+  #
+  #   * object is a Tash object.
+  #   * tash and object have the same keys (regardless of order).
+  #   * For each key `key`, `tash[key] eql? other[key]`.
+  #
+  # Otherwise, returns `false`.
+  #
+  # @param other [Object]
+  #
+  # @example
+  #   t1 = Tash[foo: 0, bar: 1, baz: 2]
+  #   t2 = Tash[foo: 0, bar: 1, baz: 2]
+  #   t1.eql? t2 # => true
+  #   h3 = Tash[baz: 2, bar: 1, foo: 0]
+  #   t1.eql? h3 # => true
+  #
+  # @return [true or false]
+  def eql?(other)
+    return false unless other.is_a?(self.class)
+
+    @ir.eql?(other.to_hash)
+  end
 
   # @overload fetch(key)
   # @overload fetch(key, default_value)

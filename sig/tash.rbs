@@ -53,6 +53,8 @@ module Tash
 
     def empty?: () -> bool
 
+    def eql?: (untyped) -> bool
+
     def fetch: (K) -> V
              | [X] (K, X) -> (V | X)
              | [X] (K) { (K) -> X } -> (V | X)
