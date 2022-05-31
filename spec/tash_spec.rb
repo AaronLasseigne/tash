@@ -285,6 +285,45 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#default' do
+    context 'without a key' do
+      it 'returns the default value' do
+        tash.default = :default
+        expect(tash.default).to be :default
+      end
+    end
+
+    context 'with a key' do
+      it 'returns the default value for that key' do
+        tash[:Foo] = 0
+        tash.default_proc = ->(t, k) { t[k] = "No key #{k}" }
+
+        expect(tash.default(:FOO)).to eql 'No key foo'
+      end
+    end
+
+    context 'with too many arguments' do
+      it 'throws an ArgumentError' do
+        expect { tash.default(1, 2) }.to raise_error ArgumentError
+      end
+    end
+  end
+
+  describe '#default_proc=' do
+    it 'provides the tash and transformed key to the block' do
+      tash.default_proc = ->(t, k) { t.is_a?(described_class) && k == :does_not_exist }
+
+      expect(tash[:DOES_NOT_EXIST]).to be true
+    end
+
+    it 'sets the proc to what is given (does not ruin comparisons by overwriting it)' do
+      prok = ->(t, k) { t.is_a?(described_class) && k == :does_not_exist }
+      tash.default_proc = prok
+
+      expect(tash.default_proc).to be prok
+    end
+  end
+
   describe '#delete' do
     context 'without a block' do
       it 'returns the value related to the transformed key if found' do

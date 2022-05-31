@@ -33,6 +33,14 @@ module Tash
 
     def compact!: () -> self?
 
+    def default: (?K) -> V?
+
+    def default=: (V) -> V
+
+    def default_proc: () -> (Proc | nil)
+
+    def default_proc=: (Proc | _ToProc | nil) -> (Proc | _ToProc | nil)
+
     def delete: (K) -> V?
               | [U] (K) { (K) -> U } -> (U | V)
 

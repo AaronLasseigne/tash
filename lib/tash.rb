@@ -66,12 +66,13 @@ class Tash
   #   before using the key
   #
   # @example
-  #   Tash.new { |k| k.to_s.downcase }
+  #   Tash.new { |key| key.to_s.downcase }
   #
   # @return [Tash]
   def initialize(&transformation)
     @transformation = transformation
     @ir = {} # internal representation - @ir[transformed key] = value
+    @default_proc = nil
   end
 
   def_delegators :@ir,
@@ -79,6 +80,7 @@ class Tash
     :<=,
     :>,
     :>=,
+    :default=,
     :empty?,
     :inspect,
     :keys,
@@ -177,6 +179,11 @@ class Tash
   #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
   #   t[:FOO] # => 0
   #
+  # @example Not found key with a default value
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.default = 1_000
+  #   t[:nosuch] # => 1_000
+  #
   # @return [value]
   def [](key)
     @ir[transform(key)]
@@ -244,6 +251,81 @@ class Tash
     self if @ir.compact!
   end
 
+  # @overload default
+  # @overload default(key)
+  #
+  # Returns the default value for the given transformed `key`. The returned
+  # value will be determined either by the default proc or by the default
+  # value.
+  #
+  # @param key [Object]
+  #
+  # @example
+  #   t = Tash.new
+  #   t.default # => nil
+  #
+  # @example With a key
+  #   t = Tash[Foo: 0]
+  #   t.default_proc = proc { |tash, key| tash[k] = "No key #{key}" }
+  #   t[:foo] = "Hello"
+  #   t.default(:FOO) # => "No key foo"
+  #
+  # @return [Object]
+  def default(*key)
+    case key.size
+    when 0
+      @ir.default
+    when 1
+      @ir.default(transform(key.first))
+    else
+      @ir.default(*key)
+    end
+  end
+
+  # @!method default=
+  #   Sets the default value to `value`.
+  #
+  #   @example
+  #     t = Tash.new
+  #     t.default # => nil
+  #     t.default = false # => false
+  #     t.default # => false
+  #
+  #   @return [Object]
+
+  # Returns the default proc for `self`.
+  #
+  # @example
+  #   t = Tash.new
+  #   t.default_proc # => nil
+  #   t.default_proc = proc { |tash, key| "Default value for #{key}" }
+  #   t.default_proc.class # => Proc
+  #
+  # @return [Proc or nil]
+  def default_proc # rubocop:disable Style/TrivialAccessors (I want it to show as a method in the docs.)
+    @default_proc
+  end
+
+  # @overload default_proc=(proc)
+  #
+  # Sets the default proc for `self` to `proc`. The `proc` is provided with the
+  # tash and a transformed `key`.
+  #
+  # @example
+  #   t = Tash.new
+  #   t.default_proc # => nil
+  #   t.default_proc = proc { |tash, key| "Default value for #{key}" }
+  #   t.default_proc.class # => Proc
+  #   t.default_proc = nil
+  #   t.default_proc # => nil
+  #
+  # @return [Proc]
+  def default_proc=(prok)
+    @default_proc = prok
+
+    @ir.default_proc = proc { |_, k| prok.call(self, transform(k)) }
+  end
+
   # Deletes the entry for the given transformed `key` and returns its
   # associated value.
   #
@@ -308,6 +390,9 @@ class Tash
   #
   # Returns the value for the given `key`, if found. Raises `KeyError` if
   # neither `default_value` nor a block was given.
+  #
+  # @note This method does not use the values of either `default` or
+  #   `default_proc`.
   #
   # @param key [Object]
   # @param default_value [Object]
