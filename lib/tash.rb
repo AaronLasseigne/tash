@@ -279,7 +279,7 @@ class Tash
   end
 
   # @!method compare_by_identity?
-  #   Returns `true` if `compare_by_identity` has been called, `false`
+  #   Returns `true` if {#compare_by_identity} has been called, `false`
   #   otherwise.
   #
   #   @return [Boolean]
