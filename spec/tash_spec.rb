@@ -604,7 +604,7 @@ RSpec.describe Tash do
         expect { tash.fetch(:does_not_exist) }.to raise_error KeyError
       end
 
-      context 'with a defaul_value' do
+      context 'with a default_value' do
         it 'returns knows keys' do
           tash[:A] = 1
 
@@ -630,6 +630,30 @@ RSpec.describe Tash do
 
       it 'overrides a default value' do
         expect(tash.fetch(:does_not_exist, 1) { 2 }).to be 2
+      end
+    end
+  end
+
+  describe '#fetch_values' do
+    context 'without a block' do
+      it 'gets the values for the keys requested' do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        expect(tash.fetch_values(:A)).to eql [1]
+      end
+    end
+
+    context 'with a block' do
+      it 'provides the transformed key to the block' do
+        expect(tash.fetch_values(:DOES_NOT_EXIST) { |k| k == :does_not_exist }).to eql [true]
+      end
+
+      it 'gets the values for the keys requested' do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        expect(tash.fetch_values(:DOES_NOT_EXIST, :A) { 3 }).to eql [3, 1]
       end
     end
   end

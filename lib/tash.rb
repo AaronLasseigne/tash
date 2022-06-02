@@ -587,6 +587,27 @@ class Tash
     @ir.fetch(transform(key), *default_value, &block)
   end
 
+  # Returns a new Array containing the values associated with the given keys
+  # *keys. When a block is given, calls the block with each missing transformed
+  # key, treating the block's return value as the value for that key.
+  #
+  # @param *keys [Array<Object>]
+  # @param block [Proc] receives a transformed `key`
+  #
+  # @example Without a block
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.fetch_values(:baz, :foo) # => [2, 0]
+  #
+  # @example With a block
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   values = t.fetch_values(:bar, :foo, :bad, :bam) {|key| key.to_s}
+  #   values # => [1, 0, "bad", "bam"]
+  #
+  # @return [Array]
+  def fetch_values(*keys, &block)
+    @ir.fetch_values(*keys.map { |k| transform(k) }, &block)
+  end
+
   # @!method inspect
   #   Returns a new String containing the tash entries.
   #

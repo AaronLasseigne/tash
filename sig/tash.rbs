@@ -74,6 +74,9 @@ module Tash
              | [X] (K, X) -> (V | X)
              | [X] (K) { (K) -> X } -> (V | X)
 
+    def fetch_values: (*K) -> Array[V]
+                    | [X] (*K) { (K) -> X } -> Array[V | X]
+
     alias filter select
 
     alias has_key? key?
