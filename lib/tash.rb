@@ -386,6 +386,28 @@ class Tash
     @ir.delete(transform(key), &block)
   end
 
+  # If a block given, calls the block with each key-value pair; deletes each
+  # entry for which the block returns a truthy value.
+  #
+  # @param block [Proc] receives a transformed key and value
+  #
+  # @example Without block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   e = t.delete_if # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:delete_if>
+  #   e.each { |key, value| value > 0 } # => {:foo=>0}
+  #
+  # @example With block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.delete_if { |key, value| value > 0 } # => {:foo=>0}
+  #
+  # @return [Enumerator, self]
+  def delete_if(&block)
+    return to_enum(:delete_if) unless block
+
+    @ir.delete_if(&block)
+    self
+  end
+
   # Finds and returns the object in nested objects that is specified by
   # transformed `key` and `identifiers`. The nested objects may be instances of
   # various classes. This method will use the default values for keys that are

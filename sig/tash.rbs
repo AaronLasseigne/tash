@@ -48,6 +48,9 @@ module Tash
     def delete: (K) -> V?
               | [U] (K) { (K) -> U } -> (U | V)
 
+    def delete_if: () { (K, V) -> boolish } -> self
+                 | () -> Enumerator[[ K, V ], self]
+
     def dig: (K, *untyped) -> untyped
 
     def each: () { ([ K, V ]) -> untyped } -> self

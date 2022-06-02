@@ -360,6 +360,34 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#delete_if' do
+    context 'without a block' do
+      it 'returns an enumerator' do
+        expect(tash.delete_if).to be_a_kind_of Enumerator
+      end
+    end
+
+    context 'with a block' do
+      it 'deletes the transformed keys that return false from the block' do
+        tash[:A] = 1
+        tash[:b] = 2
+        tash[:c] = 3
+
+        tash.delete_if do |_, v|
+          v > 1
+        end
+
+        expect(tash).to eql described_class[a: 1]
+      end
+
+      it 'returns itself' do
+        result = tash.delete_if { false }
+
+        expect(result).to be tash
+      end
+    end
+  end
+
   describe '#dig' do
     it 'returns the value if the transformed key is found' do
       tash[:Foo] = described_class[Bar: 2, &:downcase]
