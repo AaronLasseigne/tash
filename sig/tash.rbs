@@ -97,6 +97,9 @@ module Tash
 
     def invert: () -> Tash[V, K]
 
+    def keep_if: () { (K, V) -> boolish } -> self
+               | () -> Enumerator[[ K, V ], self]
+
     def key?: (K) -> bool
 
     def keys: () -> Array[K]

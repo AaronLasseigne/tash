@@ -678,6 +678,28 @@ class Tash
     new_from_self(new_ir)
   end
 
+  # Calls the block for each key-value pair; retains the entry if the block
+  # returns a truthy value; otherwise deletes the entry.
+  #
+  # @param block [Proc] receives a transformed key and value
+  #
+  # @example Without block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   e = t.keep_if # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:keep_if>
+  #   e.each { |key, value| key.start_with?('b') } # => {:bar=>1, :baz=>2}
+  #
+  # @example With block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.keep_if { |key, value| key.start_with?('b') } # => {:bar=>1, :baz=>2}
+  #
+  # @return [Enumerator, self]
+  def keep_if(&block)
+    return to_enum(:keep_if) unless block
+
+    @ir.keep_if(&block)
+    self
+  end
+
   # Returns `true` if `key` after transformation is a key in `self`, otherwise
   # `false`.
   #

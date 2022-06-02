@@ -670,6 +670,34 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#keep_if' do
+    context 'without a block' do
+      it 'returns an enumerator' do
+        expect(tash.keep_if).to be_a_kind_of Enumerator
+      end
+    end
+
+    context 'with a block' do
+      it 'keeps the transformed keys that return true from the block' do
+        tash[:A] = 1
+        tash[:b] = 2
+        tash[:c] = 3
+
+        tash.keep_if do |_, v|
+          v > 1
+        end
+
+        expect(tash).to eql described_class[b: 2, c: 3]
+      end
+
+      it 'returns itself' do
+        result = tash.keep_if { true }
+
+        expect(result).to be tash
+      end
+    end
+  end
+
   describe '#key?' do
     it 'transforms the key' do
       tash[:A] = 1
