@@ -386,6 +386,8 @@ class Tash
   # Calls the given block with each key-value pair. Returns a new Enumerator if
   # no block is given.
   #
+  # @param block [Proc] receives a transformed key and the value
+  #
   # @example Without block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   t.each # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:each>
@@ -405,6 +407,25 @@ class Tash
     self
   end
   alias each_pair each
+
+  # Calls the given block with each key.
+  #
+  # @param block [Proc] receives a transformed key
+  #
+  # @example
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.each_key {|key| puts key}
+  #   #=> foo
+  #   #=> bar
+  #   #=> baz
+  #
+  # @return [Enumerator, self]
+  def each_key(&block)
+    return to_enum(:each_key) unless block
+
+    @ir.each_key(&block)
+    self
+  end
 
   # @!method empty?
   #   Returns `true` if there are no tash entries, `false` otherwise.

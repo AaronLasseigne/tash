@@ -49,6 +49,9 @@ module Tash
     def each: () { ([ K, V ]) -> untyped } -> self
             | () -> ::Enumerator[[ K, V ], self]
 
+    def each_key: () { (K) -> untyped } -> Tash[K, V]
+                | () -> Enumerator[K, self]
+
     alias each_pair each
 
     def empty?: () -> bool
