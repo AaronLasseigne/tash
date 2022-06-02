@@ -9,6 +9,11 @@ class Tash
   extend Forwardable
   include Enumerable
 
+  def self.current_ruby_version
+    @current_ruby_version ||= RUBY_VERSION[/\A(\d+\.\d+)/, 1]
+  end
+  private_class_method :current_ruby_version
+
   # Returns a new Tash object populated with the given objects, if any. If
   # a Tash is passed with no block it returns a duplicate with the
   # transformation code from the original. If a Tash is passed with a block
@@ -560,7 +565,7 @@ class Tash
   # @return [Tash]
   def except(*keys)
     new_from_self(@ir.except(*keys))
-  end
+  end if current_ruby_version > '2.7'
 
   # @overload fetch(key)
   # @overload fetch(key, default_value)
@@ -834,5 +839,9 @@ class Tash
 
   def new_from_self(new_ir)
     self.class.new(&@transformation).tap { |tash| tash.ir = new_ir }
+  end
+
+  def current_ruby_version
+    self.class.send(:current_ruby_version)
   end
 end

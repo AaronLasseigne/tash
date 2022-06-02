@@ -24,3 +24,7 @@ RSpec.configure do |config|
   config.order = :random
   Kernel.srand config.seed
 end
+
+def when_ruby_above(version)
+  yield if Tash.send(:current_ruby_version) > version
+end

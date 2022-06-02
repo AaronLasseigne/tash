@@ -31,6 +31,8 @@ Style/FrozenStringLiteralComment:
     - Rakefile
     - Gemfile
     - spec/**/*
+Style/MultilineIfModifier:
+  Enabled: false
 Style/OpenStructUse:
   Enabled: false
 
