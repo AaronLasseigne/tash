@@ -542,6 +542,21 @@ class Tash
     @ir.eql?(other.to_hash)
   end
 
+  # Returns a new Tash excluding entries for the given `keys`. Any given keys
+  # that are not found are ignored. The transformation proc is copied to the
+  # new Tash.
+  #
+  # @param *keys [Array<Object>]
+  #
+  # @example
+  #   t = Tash[a: 100, b: 200, c: 300]
+  #   t.except(:a) #=> {:b=>200, :c=>300}
+  #
+  # @return [Tash]
+  def except(*keys)
+    new_from_self(@ir.except(*keys))
+  end
+
   # @overload fetch(key)
   # @overload fetch(key, default_value)
   #

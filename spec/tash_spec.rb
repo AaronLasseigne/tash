@@ -576,6 +576,18 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#except' do
+    it "removes keys given from the #{described_class} and returns a new one" do
+      tash[:A] = 1
+      tash[:b] = 2
+
+      result = tash.except(:a)
+
+      expect(result).to be_a_kind_of described_class
+      expect(result).to eq described_class[b: 2]
+    end
+  end
+
   describe '#fetch' do
     it 'throws an error if passed too many args' do
       expect { tash.fetch(:does_not_exist, 1, 2) }.to raise_error ArgumentError

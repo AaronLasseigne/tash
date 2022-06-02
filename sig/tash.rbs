@@ -68,6 +68,8 @@ module Tash
 
     def eql?: (untyped) -> bool
 
+    def except: (*K) -> Tash[K, V]
+
     def fetch: (K) -> V
              | [X] (K, X) -> (V | X)
              | [X] (K) { (K) -> X } -> (V | X)
