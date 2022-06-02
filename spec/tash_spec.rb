@@ -285,6 +285,12 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#compare_by_identity' do
+    it 'returns itself' do
+      expect(tash.compare_by_identity).to be tash
+    end
+  end
+
   describe '#default' do
     context 'without a key' do
       it 'returns the default value' do

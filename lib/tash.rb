@@ -80,6 +80,7 @@ class Tash
     :<=,
     :>,
     :>=,
+    :compare_by_identity,
     :default=,
     :empty?,
     :inspect,
@@ -250,6 +251,38 @@ class Tash
   def compact!
     self if @ir.compact!
   end
+
+  # Sets `self` to consider only identity in comparing keys; two keys are
+  # considered the same only if they are the same object.
+  #
+  # @example Before being set
+  #   s0 = 'x'
+  #   s1 = 'x'
+  #   t = Tash.new
+  #   t.compare_by_identity? # => false
+  #   t[s0] = 0
+  #   t[s1] = 1
+  #   t # => {"x"=>1}
+  #
+  # @example After being set
+  #   t = Tash.new
+  #   t.compare_by_identity # => {}
+  #   t.compare_by_identity? # => true
+  #   t[s0] = 0
+  #   t[s1] = 1
+  #   t # => {"x"=>0, "x"=>1}
+  #
+  # @return [self]
+  def compare_by_identity
+    @ir.compare_by_identity
+    self
+  end
+
+  # @!method compare_by_identity?
+  #   Returns `true` if `compare_by_identity` has been called, `false`
+  #   otherwise.
+  #
+  #   @return [Boolean]
 
   # @overload default
   # @overload default(key)

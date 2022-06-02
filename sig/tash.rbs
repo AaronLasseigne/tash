@@ -33,6 +33,10 @@ module Tash
 
     def compact!: () -> self?
 
+    def compare_by_identity: () -> self
+
+    def compare_by_identity?: () -> bool
+
     def default: (?K) -> V?
 
     def default=: (V) -> V
