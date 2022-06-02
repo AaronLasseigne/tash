@@ -84,6 +84,7 @@ class Tash
     :default=,
     :empty?,
     :flatten,
+    :hash,
     :inspect,
     :keys,
     :size,
@@ -639,6 +640,18 @@ class Tash
   #     t.flatten(0) == t.to_a # => true
   #
   #   @return [Array]
+
+  # @!method hash
+  #   Returns the Integer hash-code for the hash. Two Hash objects have the
+  #   same hash-code if their content is the same (regardless or order).
+  #
+  #   @example
+  #     t1 = Tash[foo: 0, bar: 1, baz: 2]
+  #     t2 = Tash[baz: 2, bar: 1, foo: 0]
+  #     t2.hash == t1.hash # => true
+  #     t2.eql? h1 # => true
+  #
+  #   @return [Integer]
 
   # @!method inspect
   #   Returns a new String containing the tash entries.
