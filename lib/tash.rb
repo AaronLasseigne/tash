@@ -650,6 +650,7 @@ class Tash
   # @example Without block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   e = t.select # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:select>
+  #   e.each { |key, value| value < 2 } # => {:foo=>0, :bar=>1}
   #
   # @example With block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
@@ -662,6 +663,26 @@ class Tash
     new_from_self(@ir.select(&block))
   end
   alias filter select
+
+  # Returns `self`, whose entries are those for which the block returns a truthy
+  # value. When given a block, it returns `nil` if no entries are removed.
+  #
+  # @example Without block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   e = t.select! # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:select!>
+  #   e.each { |key, value| value < 2 } # => {:foo=>0, :bar=>1}
+  #
+  # @example With block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.select! {|key, value| value < 2 } # => {:foo=>0, :bar=>1}
+  #
+  # @return [Enumerator, self or nil]
+  def select!(&block)
+    return to_enum(:select!) unless block
+
+    self if @ir.select!(&block)
+  end
+  alias filter! select!
 
   # @!method size
   #   Returns the count of entries in `self`.

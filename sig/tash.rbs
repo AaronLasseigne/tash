@@ -79,6 +79,8 @@ module Tash
 
     alias filter select
 
+    alias filter! select!
+
     alias has_key? key?
 
     alias include? has_key?
@@ -95,6 +97,9 @@ module Tash
 
     def select: () { (K, V) -> boolish } -> Tash[K, V]
               | () -> Enumerator[[ K, V ], Tash[K, V]]
+
+    def select!: () { (K, V) -> boolish } -> self?
+               | () -> Enumerator[[ K, V ], self?]
 
     alias size length
 
