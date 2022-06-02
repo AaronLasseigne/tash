@@ -91,6 +91,7 @@ class Tash
     :flatten,
     :hash,
     :inspect,
+    :key,
     :keys,
     :size,
     :to_a,
@@ -619,6 +620,9 @@ class Tash
   end
 
   # @!method flatten
+  #   @overload flatten
+  #   @overload flatten(level)
+  #
   #   Returns a new Array object that is a 1-dimensional flattening of `self`.
   #
   #   @param level [Integer]
@@ -704,6 +708,19 @@ class Tash
     @ir.keep_if(&block)
     self
   end
+
+  # @!method key(value)
+  #   Returns the transformed key for the first-found entry with the given
+  #   `value`. Returns `nil` if the key is not found.
+  #
+  #   @param value [Object]
+  #
+  #   @example
+  #     t = Tash[foo: 0, bar: 2, baz: 2]
+  #     t.key(0) # => :foo
+  #     t.key(2) # => :bar
+  #
+  #   @return [key or nil]
 
   # Returns `true` if `key` after transformation is a key in `self`, otherwise
   # `false`.
