@@ -83,6 +83,8 @@ module Tash
 
     alias has_key? key?
 
+    def has_value?: (V) -> bool
+
     alias include? has_key?
 
     def inspect: () -> String

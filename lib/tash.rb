@@ -89,8 +89,10 @@ class Tash
     :size,
     :to_a,
     :to_hash,
+    :value?,
     :values
 
+  alias has_value? value?
   alias length size
 
   # @!method < other
@@ -751,6 +753,11 @@ class Tash
     @transformation
   end
 
+  # @!method value?
+  #   Returns `true` if `value` is a value in `self`, otherwise `false`.
+  #
+  #   @return [Boolean]
+
   # @!method values
   #   Returns a new Array containing all values in `self`.
   #
@@ -759,6 +766,8 @@ class Tash
   #     t.values # => [0, 1, 2]
   #
   #   @return [Array]
+
+  # Without this comment, the last entry (i.e. #values) will not show up in the docs.
 
   protected
 
