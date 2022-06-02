@@ -105,6 +105,8 @@ module Tash
 
     alias store []=
 
+    def to_a: () -> Array[[ K, V ]]
+
     def to_hash: () -> Hash[K, V]
 
     def transform_proc: () -> (Proc | nil)

@@ -83,9 +83,11 @@ class Tash
     :compare_by_identity,
     :default=,
     :empty?,
+    :flatten,
     :inspect,
     :keys,
     :size,
+    :to_a,
     :to_hash,
     :values
 
@@ -608,6 +610,34 @@ class Tash
     @ir.fetch_values(*keys.map { |k| transform(k) }, &block)
   end
 
+  # @!method flatten
+  #   Returns a new Array object that is a 1-dimensional flattening of `self`.
+  #
+  #   @param level [Integer]
+  #
+  #   @example
+  #     t = Tash[foo: 0, bar: [:bat, 3], baz: 2]
+  #     t.flatten # => [:foo, 0, :bar, [:bat, 3], :baz, 2]
+  #
+  #   @example level > 1
+  #     t = Tash[foo: 0, bar: [:bat, [:baz, [:bat, ]]]]
+  #     t.flatten(1) # => [:foo, 0, :bar, [:bat, [:baz, [:bat]]]]
+  #     t.flatten(2) # => [:foo, 0, :bar, :bat, [:baz, [:bat]]]
+  #     t.flatten(3) # => [:foo, 0, :bar, :bat, :baz, [:bat]]
+  #     t.flatten(4) # => [:foo, 0, :bar, :bat, :baz, :bat]
+  #
+  #   @example negative levels flatten everything
+  #     t = Tash[foo: 0, bar: [:bat, [:baz, [:bat, ]]]]
+  #     t.flatten(-1) # => [:foo, 0, :bar, :bat, :baz, :bat]
+  #     t.flatten(-2) # => [:foo, 0, :bar, :bat, :baz, :bat]
+  #
+  #   @example level == 0 is the same as to_a
+  #     t = Tash[foo: 0, bar: [:bat, 3], baz: 2]
+  #     t.flatten(0) # => [[:foo, 0], [:bar, [:bat, 3]], [:baz, 2]]
+  #     t.flatten(0) == t.to_a # => true
+  #
+  #   @return [Array]
+
   # @!method inspect
   #   Returns a new String containing the tash entries.
   #
@@ -691,6 +721,16 @@ class Tash
   #     Tash[foo: 0, bar: 1, baz: 2].size # => 3
   #
   #   @return [Integer]
+
+  # @!method to_a
+  #   Returns a new Array of 2-element Array objects; each nested Array
+  #   contains a key-value pair from `self`.
+  #
+  #   @example
+  #     t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #     t.to_a # => [[:foo, 0], [:bar, 1], [:baz, 2]]
+  #
+  #   @return [Array]
 
   # @!method to_hash
   #   Returns tash as a Hash.
