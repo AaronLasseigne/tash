@@ -662,6 +662,22 @@ class Tash
   #
   #   @return [String]
 
+  # Returns a new Tash object with the each key-value pair inverted. The values
+  # will be processed using the key transformation.
+  #
+  # @example
+  #   t = Tash[foo: 'Foo', bar: 'Bar', baz: 'Baz', &:downcase]
+  #   t1 = t.invert
+  #   t1 # => {'foo'=>:foo, 'bar'=>:bar, 'baz'=>:baz}
+  #
+  # @return [Tash]
+  def invert
+    new_ir = @ir.invert
+    new_ir.transform_keys! { |k| transform(k) }
+
+    new_from_self(new_ir)
+  end
+
   # Returns `true` if `key` after transformation is a key in `self`, otherwise
   # `false`.
   #

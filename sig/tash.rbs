@@ -95,6 +95,8 @@ module Tash
 
     def inspect: () -> String
 
+    def invert: () -> Tash[V, K]
+
     def key?: (K) -> bool
 
     def keys: () -> Array[K]

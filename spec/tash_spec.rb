@@ -658,6 +658,18 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#invert' do
+    it 'flips the keys and values while running the values through the transformation' do
+      tash[:a] = 'A'
+      tash[:b] = 'B'
+
+      result = tash.invert
+
+      expect(result).to be_a_kind_of described_class
+      expect(result).to eq described_class['a' => :a, 'b' => :b]
+    end
+  end
+
   describe '#key?' do
     it 'transforms the key' do
       tash[:A] = 1
