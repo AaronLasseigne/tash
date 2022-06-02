@@ -437,6 +437,36 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#each_value' do
+    context 'without a block' do
+      it 'returns an enumerator' do
+        expect(tash.each_value).to be_a_kind_of Enumerator
+      end
+    end
+
+    context 'with a block' do
+      it 'enumerates each key-value pair' do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        output = []
+        tash.each_value do |v|
+          output << v
+        end
+
+        expect(output).to eql [1, 2]
+      end
+
+      it 'returns itself' do
+        result = tash.each_value do |v|
+          # noop
+        end
+
+        expect(result).to be tash
+      end
+    end
+  end
+
   describe '#eql?' do
     it "fails if the object is not a #{described_class}" do
       expect(tash.eql?(1)).to be false

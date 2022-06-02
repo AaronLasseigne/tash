@@ -54,6 +54,9 @@ module Tash
 
     alias each_pair each
 
+    def each_value: () { (V) -> untyped } -> self
+                  | () -> Enumerator[V, self]
+
     def empty?: () -> bool
 
     def eql?: (untyped) -> bool

@@ -412,7 +412,11 @@ class Tash
   #
   # @param block [Proc] receives a transformed key
   #
-  # @example
+  # @example Without block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.each_key # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:each_key>
+  #
+  # @example With block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   t.each_key {|key| puts key}
   #   #=> foo
@@ -424,6 +428,29 @@ class Tash
     return to_enum(:each_key) unless block
 
     @ir.each_key(&block)
+    self
+  end
+
+  # Calls the given block with each value.
+  #
+  # @param block [Proc] receives a value
+  #
+  # @example Without block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.each_value # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:each_value>
+  #
+  # @example With block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.each_value {|value| puts value}
+  #   #=> 0
+  #   #=> 1
+  #   #=> 2
+  #
+  # @return [Enumerator, self]
+  def each_value(&block)
+    return to_enum(:each_value) unless block
+
+    @ir.each_value(&block)
     self
   end
 
