@@ -81,13 +81,17 @@ module Tash
 
     alias filter! select!
 
+    def flatten: () -> Array[K | V]
+               | (1 level) -> Array[K | V]
+               | (Integer level) -> Array[untyped]
+
     alias has_key? key?
 
     def has_value?: (V) -> bool
 
-    alias include? has_key?
-
     def hash: () -> Integer
+
+    alias include? has_key?
 
     def inspect: () -> String
 
