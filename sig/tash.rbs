@@ -11,15 +11,15 @@ module Tash
 
     public
 
-    def <: [A, B] (Hash[A, B]) -> bool
+    def <: [A, B] ((Tash | Hash)[A, B]) -> bool
 
-    def <=: [A, B] (Hash[A, B]) -> bool
+    def <=: [A, B] ((Tash | Hash)[A, B]) -> bool
 
     def ==: (untyped other) -> bool
 
-    def >: [A, B] (Hash[A, B]) -> bool
+    def >: [A, B] ((Tash | Hash)[A, B]) -> bool
 
-    def >=: [A, B] (Hash[A, B]) -> bool
+    def >=: [A, B] ((Tash | Hash)[A, B]) -> bool
 
     def []: (K) -> V
 
