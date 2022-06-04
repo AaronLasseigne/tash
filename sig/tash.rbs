@@ -110,6 +110,9 @@ module Tash
 
     alias member? has_key?
 
+    def merge: [A, B] (*(Tash | Hash)[A, B] other_tashes_or_hashes) -> Tash[A | K, B | V]
+             | [A, B, C] (*(Tash | Hash)[A, B] other_tashes_or_hashes) { (K key, V oldval, B newval) -> C } -> Tash[A | K, B | V | C]
+
     def select: () { (K, V) -> boolish } -> Tash[K, V]
               | () -> Enumerator[[ K, V ], Tash[K, V]]
 
