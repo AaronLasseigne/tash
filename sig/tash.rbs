@@ -113,6 +113,9 @@ module Tash
     def merge: [A, B] (*(Tash | Hash)[A, B] other_tashes_or_hashes) -> Tash[A | K, B | V]
              | [A, B, C] (*(Tash | Hash)[A, B] other_tashes_or_hashes) { (K key, V oldval, B newval) -> C } -> Tash[A | K, B | V | C]
 
+    def merge!: (*(Tash | Hash)[K, V] other_tashes_or_hashes) -> self
+              | (*(Tash | Hash)[K, V] other_tashes_or_hashes) { (K key, V oldval, V newval) -> V } -> self
+
     def select: () { (K, V) -> boolish } -> Tash[K, V]
               | () -> Enumerator[[ K, V ], Tash[K, V]]
 
@@ -128,6 +131,8 @@ module Tash
     def to_hash: () -> Hash[K, V]
 
     def transform_proc: () -> (Proc | nil)
+
+    alias update merge!
 
     def values: () -> Array[V]
 

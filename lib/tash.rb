@@ -803,6 +803,59 @@ class Tash
     new_from_self(new_ir)
   end
 
+  # Merges each of `other_tashes_or_hashes` into `self`.
+  #
+  # Each argument in `other_tashes_or_hashes` must be a Tash or Hash.
+  #
+  # With arguments and no block:
+  #
+  #   * Returns `self`, after the given tashes and hashes are merged into it.
+  #   * The given tashes and hashes are merged left to right.
+  #   * Each new entry is added at the end.
+  #   * Each duplicate-key entry's value overwrites the previous value.
+  #
+  # With arguments and a block:
+  #
+  #   * Returns `self`, after the given tashes and hashes are merged.
+  #   * The given tashes and hashes are merged left to right.
+  #   * Each new-key entry is added at the end.
+  #   * For each duplicate key:
+  #     * Calls the block with the transformed key and the old and new values.
+  #     * The block's return value becomes the new value for the entry.
+  #
+  # With no arguments:
+  #
+  #   * Returns `self`, unmodified.
+  #   * The block, if given, is ignored.
+  #
+  # @example With arguments and no block
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t1 = Tash[bat: 3, bar: 4]
+  #   h = {BAM: 5, BAT: 6}
+  #   t.merge!(t1, h) # => {:foo=>0, :bar=>4, :baz=>2, :bat=>6, :bam=>5}
+  #
+  # @example With arguments and a block
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t1 = Tash[bat: 3, bar: 4]
+  #   h = {BAM: 5, BAT: 6}
+  #   t2 = t.merge!(t1, h) { |key, old_value, new_value| old_value + new_value }
+  #   t2 # => {:foo=>0, :bar=>5, :baz=>2, :bat=>9, :bam=>5}
+  #
+  # @example With no arguments
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.merge # => {:foo=>0, :bar=>1, :baz=>2}
+  #   t1 = t.merge! { |key, old_value, new_value| raise 'Cannot happen' }
+  #   t1 # => {:foo=>0, :bar=>1, :baz=>2}
+  #
+  # @return [self]
+  def merge!(*others, &block)
+    others.each do |other|
+      @ir.merge!(other.to_hash.transform_keys { |k| transform(k) }, &block)
+    end
+    self
+  end
+  alias update merge!
+
   # Returns a new Tash object whose entries are those for which the block
   # returns a truthy value. Returns a new Enumerator if no block given.
   #

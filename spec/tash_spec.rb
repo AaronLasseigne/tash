@@ -710,7 +710,7 @@ RSpec.describe Tash do
 
   describe '#merge' do
     context 'with no arguments' do
-      it "returns a #{described_class} containing the keys of the other class" do
+      it 'returns a copy of self' do
         tash[:A] = 1
         tash[:b] = 2
 
@@ -720,7 +720,7 @@ RSpec.describe Tash do
         expect(tash2).to_not be tash
       end
 
-      it "copies over the transformation strategy from the provided #{described_class}" do
+      it 'copies over the transformation strategy' do
         tash[:A] = 1
         tash[:b] = 2
 
@@ -768,6 +768,52 @@ RSpec.describe Tash do
         tash[:a] = 1
 
         expect(tash.merge(A: 2) { |k| k == :a }[:a]).to be true
+      end
+    end
+  end
+
+  describe '#merge!' do
+    context 'with no arguments' do
+      it 'returns itself' do
+        tash2 = tash.merge!
+
+        expect(tash2).to be tash
+      end
+
+      it 'does not execute the block' do
+        expect { tash.merge! { raise StandardError } }.to_not raise_error StandardError
+      end
+    end
+
+    context 'without a block' do
+      it 'merges all tash and hashes in order' do
+        tash[:A] = 0
+        tash[:b] = 1
+        tash[:C] = 2
+        t1 = described_class[d: 3, B: 4]
+        h = { E: 5, d: 6 }
+
+        expect(tash.merge!(t1, h)).to be tash
+        expect(tash).to eq described_class[a: 0, b: 4, c: 2, d: 6, e: 5]
+      end
+    end
+
+    context 'with a block' do
+      it 'handles collisions by calling the block' do
+        tash[:A] = 0
+        tash[:b] = 1
+        tash[:C] = 2
+        t1 = described_class[d: 3, B: 4]
+        h = { E: 5, d: 6 }
+
+        expect(tash.merge!(t1, h) { |_, old_v, new_v| old_v + new_v }).to be tash
+        expect(tash).to eq described_class[a: 0, b: 5, c: 2, d: 9, e: 5]
+      end
+
+      it 'provides the transformed key to the block' do
+        tash[:a] = 1
+
+        expect(tash.merge!(A: 2) { |k| k == :a }[:a]).to be true
       end
     end
   end
