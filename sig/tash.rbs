@@ -118,6 +118,8 @@ module Tash
 
     def rassoc: (V) -> [ K, V ]?
 
+    def rehash: () -> self
+
     def select: () { (K, V) -> boolish } -> Tash[K, V]
               | () -> Enumerator[[ K, V ], Tash[K, V]]
 

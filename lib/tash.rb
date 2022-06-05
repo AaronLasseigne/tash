@@ -94,6 +94,7 @@ class Tash
     :key,
     :keys,
     :rassoc,
+    :rehash,
     :size,
     :to_a,
     :to_hash,
@@ -886,6 +887,13 @@ class Tash
   #   @param value [Object]
   #
   #   @return [Array<K,V> or nil]
+
+  # @!method rehash
+  #   Rebuilds the hash table by recomputing the hash index for each key. The
+  #   hash table becomes invalid if the hash value of a key has changed after
+  #   the entry was created.
+  #
+  #   @return [self]
 
   # Returns a new Tash object whose entries are those for which the block
   # returns a truthy value. Returns a new Enumerator if no block given.
