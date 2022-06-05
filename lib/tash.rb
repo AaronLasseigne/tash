@@ -93,6 +93,7 @@ class Tash
     :inspect,
     :key,
     :keys,
+    :rassoc,
     :size,
     :to_a,
     :to_hash,
@@ -855,6 +856,19 @@ class Tash
     self
   end
   alias update merge!
+
+  # @!method rassoc(value)
+  #   Returns a new 2-element Array consisting of the key and value of the
+  #   first-found entry whose value is `==` to value. Returns `nil` if no such
+  #   value found.
+  #
+  #   @param value [Object]
+  #
+  #   @example
+  #     t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #     t.rassoc(1) # => [:bar, 1]
+  #
+  #   @return [Array<K,V> or nil]
 
   # Returns a new Tash object whose entries are those for which the block
   # returns a truthy value. Returns a new Enumerator if no block given.
