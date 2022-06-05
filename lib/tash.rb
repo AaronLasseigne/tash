@@ -19,8 +19,6 @@ class Tash
   # transformation code from the original. If a Tash is passed with a block
   # it is treated as a Hash.
   #
-  # @param *objects [Array<Objects>] A Tash, Hash, or even number of objects
-  #
   # @example Empty
   #   Tash[] # => {}
   #
@@ -35,6 +33,8 @@ class Tash
   #
   # @example Given an even number of objects
   #   Tash[:FOO, 1, :BAR, 2, &:downcase] # => {:foo=>1, :bar=>2}
+  #
+  # @param *objects [Array<Objects>] A Tash, Hash, or even number of objects
   #
   # @return [Tash]
   def self.[](*objects, &transformation) # rubocop:disable Metrics/PerceivedComplexity
@@ -67,11 +67,11 @@ class Tash
 
   # Returns a new empty Tash object.
   #
-  # @param transformation [Proc] receives a key and transforms it as desired
-  #   before using the key
-  #
   # @example
   #   Tash.new { |key| key.to_s.downcase }
+  #
+  # @param transformation [Proc] receives a key and transforms it as desired
+  #   before using the key
   #
   # @return [Tash]
   def initialize(&transformation)
@@ -106,8 +106,6 @@ class Tash
   # @!method < other
   #   Returns `true` if tash is a proper subset of other, `false` otherwise.
   #
-  #   @param other [Tash, Hash]
-  #
   #   @example
   #     t1 = Tash[foo: 0, bar: 1]
   #     t2 = Tash[foo: 0, bar: 1, baz: 2]
@@ -115,12 +113,12 @@ class Tash
   #     t2 < t1 # => false
   #     t1 < t1 # => false
   #
+  #   @param other [Tash, Hash]
+  #
   #   @return [true or false]
 
   # @!method <= other
   #   Returns `true` if tash is a subset of other, `false` otherwise.
-  #
-  #   @param other [Tash, Hash]
   #
   #   @example
   #     t1 = Tash[foo: 0, bar: 1]
@@ -128,6 +126,8 @@ class Tash
   #     t1 <= t2 # => true
   #     t2 <= t1 # => false
   #     t1 <= t1 # => true
+  #
+  #   @param other [Tash, Hash]
   #
   #   @return [true or false]
 
@@ -139,14 +139,14 @@ class Tash
   #
   # Otherwise, returns `false`.
   #
-  # @param other [Object]
-  #
   # @example
   #   t1 = Tash[foo: 0, bar: 1, baz: 2]
   #   t2 = Tash[foo: 0, bar: 1, baz: 2]
   #   t1 == t2 # => true
   #   h3 = Tash[baz: 2, bar: 1, foo: 0]
   #   t1 == h3 # => true
+  #
+  # @param other [Object]
   #
   # @return [true or false]
   def ==(other)
@@ -158,8 +158,6 @@ class Tash
   # @!method > other
   #   Returns `true` if tash is a proper superset of other, `false` otherwise.
   #
-  #   @param other [Tash, Hash]
-  #
   #   @example
   #     t1 = Tash[foo: 0, bar: 1, baz: 2]
   #     t2 = Tash[foo: 0, bar: 1]
@@ -167,12 +165,12 @@ class Tash
   #     t2 > t1 # => false
   #     t1 > t1 # => false
   #
+  #   @param other [Tash, Hash]
+  #
   #   @return [true or false]
 
   # @!method >= other
   #   Returns `true` if tash is a superset of other, `false` otherwise.
-  #
-  #   @param other [Tash, Hash]
   #
   #   @example
   #     t1 = Tash[foo: 0, bar: 1, baz: 2]
@@ -181,12 +179,12 @@ class Tash
   #     t2 >= t1 # => false
   #     t1 >= t1 # => true
   #
+  #   @param other [Tash, Hash]
+  #
   #   @return [true or false]
 
   # Returns the value associated with the given `key` after transformation, if
   # found.
-  #
-  # @param key [Object]
   #
   # @example
   #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
@@ -196,6 +194,8 @@ class Tash
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   t.default = 1_000
   #   t[:nosuch] # => 1_000
+  #
+  # @param key [Object]
   #
   # @return [value]
   def [](key)
@@ -208,15 +208,15 @@ class Tash
   # does not exist, adds the transformed `key` and `value`; the new entry is
   # last in the order.
   #
-  # @param key [Object]
-  # @param value [Object]
-  #
   # @example
   #   t = Tash[Foo: 0, Bar: 1, &:downcase]
   #   t[:FOO] = 2 # => 2
   #   t.store(:bar, 3) # => 3
   #   t[:Bat] = 4 # => 4
   #   t # => {:foo=>2, :bar=>3, :bat=>4}
+  #
+  # @param key [Object]
+  # @param value [Object]
   #
   # @return [value]
   def []=(key, value)
@@ -227,6 +227,12 @@ class Tash
   # If the given transformed `key` is found, returns a 2-element Array
   # containing that key and its value. Returns `nil` if the tranformed key
   # `key` is not found.
+  #
+  # @example
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.assoc(:bar) # => [:bar, 1]
+  #
+  # @param key [Object]
   #
   # @return [Array<K,V> or nil]
   def assoc(key)
@@ -303,8 +309,6 @@ class Tash
   # value will be determined either by the default proc or by the default
   # value.
   #
-  # @param key [Object]
-  #
   # @example
   #   t = Tash.new
   #   t.default # => nil
@@ -314,6 +318,8 @@ class Tash
   #   t.default_proc = proc { |tash, key| tash[k] = "No key #{key}" }
   #   t[:foo] = "Hello"
   #   t.default(:FOO) # => "No key foo"
+  #
+  # @param key [Object]
   #
   # @return [Object]
   def default(*key)
@@ -327,7 +333,7 @@ class Tash
     end
   end
 
-  # @!method default=
+  # @!method default=(value)
   #   Sets the default value to `value`.
   #
   #   @example
@@ -335,6 +341,8 @@ class Tash
   #     t.default # => nil
   #     t.default = false # => false
   #     t.default # => false
+  #
+  #   @param value [Object]
   #
   #   @return [Object]
 
@@ -353,8 +361,7 @@ class Tash
 
   # @overload default_proc=(proc)
   #
-  # Sets the default proc for `self` to `proc`. The `proc` is provided with the
-  # tash and a transformed `key`.
+  # Sets the default proc for `self` to `proc`.
   #
   # @example
   #   t = Tash.new
@@ -363,6 +370,8 @@ class Tash
   #   t.default_proc.class # => Proc
   #   t.default_proc = nil
   #   t.default_proc # => nil
+  #
+  # @param proc [Proc] receives self and a transformed key
   #
   # @return [Proc]
   def default_proc=(prok)
@@ -373,9 +382,6 @@ class Tash
 
   # Deletes the entry for the given transformed `key` and returns its
   # associated value.
-  #
-  # @param key [Object]
-  # @param block [Proc] receives a transformed key
   #
   # @example
   #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
@@ -393,6 +399,9 @@ class Tash
   #   t.delete(:nosuch) { |key| "Key #{key} not found" } # => "Key nosuch not found"
   #   t # => {:foo=>0, :bar=>1, :baz=>2}
   #
+  # @param key [Object]
+  # @param block [Proc] receives a transformed key
+  #
   # @return [value or nil, Object]
   def delete(key, &block)
     @ir.delete(transform(key), &block)
@@ -400,8 +409,6 @@ class Tash
 
   # If a block given, calls the block with each key-value pair; deletes each
   # entry for which the block returns a truthy value.
-  #
-  # @param block [Proc] receives a transformed key and value
   #
   # @example Without block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
@@ -411,6 +418,8 @@ class Tash
   # @example With block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   t.delete_if { |key, value| value > 0 } # => {:foo=>0}
+  #
+  # @param block [Proc] receives a transformed key and value
   #
   # @return [Enumerator, self]
   def delete_if(&block)
@@ -424,9 +433,6 @@ class Tash
   # transformed `key` and `identifiers`. The nested objects may be instances of
   # various classes. This method will use the default values for keys that are
   # not present.
-  #
-  # @param key [Object]
-  # @param *identifiers [Object]
   #
   # @example Nested Tashes
   #   t = Tash[Foo: Tash[Bar: 2, &:downcase], &:downcase]
@@ -445,6 +451,9 @@ class Tash
   #   t.dig(:hello, :world) # => t
   #   t.dig(:hello, :world, :foo, :bar, 2) # => :c
   #
+  # @param key [Object]
+  # @param *identifiers [Object]
+  #
   # @return [Object]
   def dig(key, *identifiers)
     @ir.dig(transform(key), *identifiers)
@@ -452,8 +461,6 @@ class Tash
 
   # Calls the given block with each key-value pair. Returns a new Enumerator if
   # no block is given.
-  #
-  # @param block [Proc] receives a transformed key and the value
   #
   # @example Without block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
@@ -466,6 +473,8 @@ class Tash
   #   #=> bar: 1
   #   #=> baz: 2
   #
+  # @param block [Proc] receives a transformed key and the value
+  #
   # @return [Enumerator, self]
   def each(&block)
     return to_enum(:each) unless block
@@ -476,8 +485,6 @@ class Tash
   alias each_pair each
 
   # Calls the given block with each key.
-  #
-  # @param block [Proc] receives a transformed key
   #
   # @example Without block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
@@ -490,6 +497,8 @@ class Tash
   #   #=> bar
   #   #=> baz
   #
+  # @param block [Proc] receives a transformed key
+  #
   # @return [Enumerator, self]
   def each_key(&block)
     return to_enum(:each_key) unless block
@@ -499,8 +508,6 @@ class Tash
   end
 
   # Calls the given block with each value.
-  #
-  # @param block [Proc] receives a value
   #
   # @example Without block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
@@ -512,6 +519,8 @@ class Tash
   #   #=> 0
   #   #=> 1
   #   #=> 2
+  #
+  # @param block [Proc] receives a value
   #
   # @return [Enumerator, self]
   def each_value(&block)
@@ -538,14 +547,14 @@ class Tash
   #
   # Otherwise, returns `false`.
   #
-  # @param other [Object]
-  #
   # @example
   #   t1 = Tash[foo: 0, bar: 1, baz: 2]
   #   t2 = Tash[foo: 0, bar: 1, baz: 2]
   #   t1.eql? t2 # => true
   #   h3 = Tash[baz: 2, bar: 1, foo: 0]
   #   t1.eql? h3 # => true
+  #
+  # @param other [Object]
   #
   # @return [true or false]
   def eql?(other)
@@ -558,11 +567,11 @@ class Tash
   # that are not found are ignored. The transformation proc is copied to the
   # new Tash.
   #
-  # @param *keys [Array<Object>]
-  #
   # @example
   #   t = Tash[a: 100, b: 200, c: 300]
   #   t.except(:a) #=> {:b=>200, :c=>300}
+  #
+  # @param *keys [Array<Object>]
   #
   # @return [Tash]
   def except(*keys)
@@ -578,10 +587,6 @@ class Tash
   # @note This method does not use the values of either `default` or
   #   `default_proc`.
   #
-  # @param key [Object]
-  # @param default_value [Object]
-  # @param block [Proc] receives a transformed `key`
-  #
   # @example
   #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
   #   t.fetch(:bar) # => 1
@@ -592,9 +597,13 @@ class Tash
   # @example With a default block
   #   Tash.new.fetch(:NOSUCH) {|key| "No key #{key}"} # => "No key nosuch"
   #
-  # @raise [KeyError] When `key` is not found and no default is provided.
+  # @param key [Object]
+  # @param default_value [Object]
+  # @param block [Proc] receives a transformed `key`
   #
   # @return [Object]
+  #
+  # @raise [KeyError] When `key` is not found and no default is provided.
   def fetch(key, *default_value, &block)
     @ir.fetch(transform(key), *default_value, &block)
   end
@@ -602,9 +611,6 @@ class Tash
   # Returns a new Array containing the values associated with the given keys
   # *keys. When a block is given, calls the block with each missing transformed
   # key, treating the block's return value as the value for that key.
-  #
-  # @param *keys [Array<Object>]
-  # @param block [Proc] receives a transformed `key`
   #
   # @example Without a block
   #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
@@ -614,6 +620,9 @@ class Tash
   #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
   #   values = t.fetch_values(:bar, :foo, :bad, :bam) {|key| key.to_s}
   #   values # => [1, 0, "bad", "bam"]
+  #
+  # @param *keys [Array<Object>]
+  # @param block [Proc] receives a transformed `key`
   #
   # @return [Array]
   def fetch_values(*keys, &block)
@@ -625,8 +634,6 @@ class Tash
   #   @overload flatten(level)
   #
   #   Returns a new Array object that is a 1-dimensional flattening of `self`.
-  #
-  #   @param level [Integer]
   #
   #   @example
   #     t = Tash[foo: 0, bar: [:bat, 3], baz: 2]
@@ -648,6 +655,8 @@ class Tash
   #     t = Tash[foo: 0, bar: [:bat, 3], baz: 2]
   #     t.flatten(0) # => [[:foo, 0], [:bar, [:bat, 3]], [:baz, 2]]
   #     t.flatten(0) == t.to_a # => true
+  #
+  #   @param level [Integer]
   #
   #   @return [Array]
 
@@ -691,8 +700,6 @@ class Tash
   # Calls the block for each key-value pair; retains the entry if the block
   # returns a truthy value; otherwise deletes the entry.
   #
-  # @param block [Proc] receives a transformed key and value
-  #
   # @example Without block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   e = t.keep_if # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:keep_if>
@@ -701,6 +708,8 @@ class Tash
   # @example With block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   t.keep_if { |key, value| key.start_with?('b') } # => {:bar=>1, :baz=>2}
+  #
+  # @param block [Proc] receives a transformed key and value
   #
   # @return [Enumerator, self]
   def keep_if(&block)
@@ -714,24 +723,24 @@ class Tash
   #   Returns the transformed key for the first-found entry with the given
   #   `value`. Returns `nil` if the key is not found.
   #
-  #   @param value [Object]
-  #
   #   @example
   #     t = Tash[foo: 0, bar: 2, baz: 2]
   #     t.key(0) # => :foo
   #     t.key(2) # => :bar
+  #
+  #   @param value [Object]
   #
   #   @return [key or nil]
 
   # Returns `true` if `key` after transformation is a key in `self`, otherwise
   # `false`.
   #
-  # @param key [Object]
-  #
   # @example
   #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
   #   t.key?(:FOO) # => true
   #   t.key?(:bat) # => false
+  #
+  # @param key [Object]
   #
   # @return [true or false]
   def key?(key)
@@ -796,6 +805,10 @@ class Tash
   #   t1 = t.merge { |key, old_value, new_value| raise 'Cannot happen' }
   #   t1 # => {:foo=>0, :bar=>1, :baz=>2}
   #
+  # @param *others [Tash or Hash]
+  # @param block [Proc] receives a transformed key, the old value, and the new
+  #   value
+  #
   # @return [Tash]
   def merge(*others, &block)
     new_ir = others.each_with_object(@ir.dup) do |other, ir|
@@ -848,6 +861,10 @@ class Tash
   #   t1 = t.merge! { |key, old_value, new_value| raise 'Cannot happen' }
   #   t1 # => {:foo=>0, :bar=>1, :baz=>2}
   #
+  # @param *others [Tash or Hash]
+  # @param block [Proc] receives a transformed key, the old value, and the new
+  #   value
+  #
   # @return [self]
   def merge!(*others, &block)
     others.each do |other|
@@ -862,11 +879,11 @@ class Tash
   #   first-found entry whose value is `==` to value. Returns `nil` if no such
   #   value found.
   #
-  #   @param value [Object]
-  #
   #   @example
   #     t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
   #     t.rassoc(1) # => [:bar, 1]
+  #
+  #   @param value [Object]
   #
   #   @return [Array<K,V> or nil]
 
@@ -881,6 +898,8 @@ class Tash
   # @example With block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   t.select {|key, value| value < 2 } # => {:foo=>0, :bar=>1}
+  #
+  # @param block [Proc] receives a transformed key and value
   #
   # @return [Enumerator, Tash]
   def select(&block)
@@ -901,6 +920,8 @@ class Tash
   # @example With block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   t.select! {|key, value| value < 2 } # => {:foo=>0, :bar=>1}
+  #
+  # @param block [Proc] receives a transformed key and value
   #
   # @return [Enumerator, self or nil]
   def select!(&block)
