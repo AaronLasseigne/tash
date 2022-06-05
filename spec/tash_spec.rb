@@ -818,6 +818,50 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#reject' do
+    context 'without a block' do
+      it 'returns an enumerator' do
+        expect(tash.reject).to be_a_kind_of Enumerator
+      end
+    end
+
+    context 'with a block' do
+      it "select the #{described_class} and returns a new one" do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        result = tash.reject { |_k, v| v.even? }
+
+        expect(result).to be_a_kind_of described_class
+        expect(result).to eq described_class[a: 1]
+      end
+    end
+  end
+
+  describe '#reject!' do
+    context 'without a block' do
+      it 'returns an enumerator' do
+        expect(tash.reject!).to be_a_kind_of Enumerator
+      end
+    end
+
+    context 'with a block' do
+      it 'returns nil if no change occurs' do
+        expect(tash.reject! { true }).to be_nil
+      end
+
+      it "select the #{described_class} and returns a new one" do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        result = tash.reject! { |_k, v| v.even? }
+
+        expect(result).to be tash
+        expect(tash).to eq described_class[a: 1]
+      end
+    end
+  end
+
   describe '#select' do
     context 'without a block' do
       it 'returns an enumerator' do

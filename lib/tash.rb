@@ -895,17 +895,62 @@ class Tash
   #
   #   @return [self]
 
+  # Returns a new Tash object whose entries are all those from `self` for which
+  # the block returns `false` or `nil`. Returns a new Enumerator if no block
+  # given.
+  #
+  # @example Without a block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   e = t.reject # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:reject>
+  #   t1 = e.each { |key, value| key.start_with?('b') }
+  #   t1 # => {:foo=>0}
+  #
+  # @example With a block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t1 = t.reject { |key, value| key.start_with?('b') }
+  #   t1 # => {:foo=>0}
+  #
+  # @param block [Proc] receives a transformed key and value
+  #
+  # @return [Enumerator, Tash]
+  def reject(&block)
+    return to_enum(:reject) unless block
+
+    new_from_self(@ir.reject(&block))
+  end
+
+  # Returns `self`, whose remaining entries are those for which the block
+  # returns `false` or `nil`. Returns `nil` if no entries are removed.
+  #
+  # @example Without a block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   e = t.reject! # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:reject!>
+  #   t1 = e.each { |key, value| key.start_with?('b') } # => {:foo=>0}
+  #
+  # @example With a block
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.reject! { |key, value| value < 2 } # => {:foo=>0, :bar=>1}
+  #
+  # @param block [Proc] receives a transformed key and value
+  #
+  # @return [Enumerator, self or nil]
+  def reject!(&block)
+    return to_enum(:reject!) unless block
+
+    self if @ir.reject!(&block)
+  end
+
   # Returns a new Tash object whose entries are those for which the block
   # returns a truthy value. Returns a new Enumerator if no block given.
   #
-  # @example Without block
+  # @example Without a block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   e = t.select # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:select>
   #   e.each { |key, value| value < 2 } # => {:foo=>0, :bar=>1}
   #
-  # @example With block
+  # @example With a block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
-  #   t.select {|key, value| value < 2 } # => {:foo=>0, :bar=>1}
+  #   t.select { |key, value| value < 2 } # => {:foo=>0, :bar=>1}
   #
   # @param block [Proc] receives a transformed key and value
   #
@@ -920,14 +965,14 @@ class Tash
   # Returns `self`, whose entries are those for which the block returns a truthy
   # value. When given a block, it returns `nil` if no entries are removed.
   #
-  # @example Without block
+  # @example Without a block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
   #   e = t.select! # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:select!>
   #   e.each { |key, value| value < 2 } # => {:foo=>0, :bar=>1}
   #
-  # @example With block
+  # @example With a block
   #   t = Tash[foo: 0, bar: 1, baz: 2]
-  #   t.select! {|key, value| value < 2 } # => {:foo=>0, :bar=>1}
+  #   t.select! { |key, value| value < 2 } # => {:foo=>0, :bar=>1}
   #
   # @param block [Proc] receives a transformed key and value
   #
