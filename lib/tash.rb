@@ -95,6 +95,7 @@ class Tash
     :keys,
     :rassoc,
     :rehash,
+    :shift,
     :size,
     :to_a,
     :to_hash,
@@ -983,6 +984,17 @@ class Tash
     self if @ir.select!(&block)
   end
   alias filter! select!
+
+  # @!method shift
+  #   Removes the first tash entry and returns a 2-element Array containing the
+  #   removed key and value. Returns the default value if the hash is empty.
+  #
+  #   @example
+  #     t = Tash[foo: 0, bar: 1, baz: 2]
+  #     t.shift # => [:foo, 0]
+  #     t # => {:bar=>1, :baz=>2}
+  #
+  #   @return [[key, value] or default value]
 
   # @!method size
   #   Returns the count of entries in `self`.

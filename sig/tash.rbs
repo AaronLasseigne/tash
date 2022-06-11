@@ -132,6 +132,8 @@ module Tash
     def select!: () { (K, V) -> boolish } -> self?
                | () -> Enumerator[[ K, V ], self?]
 
+    def shift: () -> [ K, V ]?
+
     alias size length
 
     alias store []=
