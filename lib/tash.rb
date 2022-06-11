@@ -16,7 +16,7 @@ class Tash
 
   # Returns a new Tash object populated with the given objects, if any. If
   # a Tash is passed with no block it returns a duplicate with the
-  # transformation code from the original. If a Tash is passed with a block
+  # transformation block from the original. If a Tash is passed with a block
   # it is treated as a Hash.
   #
   # @example Empty
@@ -939,6 +939,31 @@ class Tash
     return to_enum(:reject!) unless block
 
     self if @ir.reject!(&block)
+  end
+
+  # Replaces the entire contents of `self` with the contents of `other`. If
+  # `other` is a tash it also replaces the transformation block.
+  #
+  # @example With a hash
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.replace({Bat: 3, Bam: 4}) # => {:bat=>3, :bam=>4}
+  #
+  # @example With a tash
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.replace(Tash[Bat: 3, Bam: 4, &:upcase]) # => {:BAT=>3, :BAM=>4}
+  #
+  # @param other [Tash, Hash]
+  #
+  # @return [self]
+  def replace(other)
+    if other.is_a?(self.class)
+      @ir.replace(other.to_hash)
+      @transformation = other.transform_proc
+    else
+      @ir.replace(other.to_hash.transform_keys { |k| transform(k) })
+    end
+
+    self
   end
 
   # Returns a new Tash object whose entries are those for which the block

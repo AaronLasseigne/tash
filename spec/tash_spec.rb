@@ -862,6 +862,54 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#replace' do
+    context 'with a hash' do
+      it 'is the same tash' do
+        expect(tash.replace({})).to be tash
+      end
+
+      it 'replaces the contents' do
+        tash[:A] = 1
+        tash[:b] = 2
+        tash[:c] = 3
+
+        tash.replace({ D: 4, e: 5 })
+
+        expect(tash.size).to be 2
+        expect(tash[:d]).to be 4
+        expect(tash[:e]).to be 5
+      end
+    end
+
+    context 'with a tash' do
+      it 'is the same tash' do
+        expect(tash.replace(described_class.new)).to be tash
+      end
+
+      it 'replaces the contents' do
+        tash[:A] = 1
+        tash[:b] = 2
+        tash[:c] = 3
+
+        tash.replace(described_class[D: 4, e: 5])
+
+        expect(tash.size).to be 2
+        expect(tash[:D]).to be 4
+        expect(tash[:e]).to be 5
+      end
+
+      it 'replaces the transformation block' do
+        tash[:A] = 1
+        tash[:b] = 2
+        tash[:c] = 3
+
+        tash.replace(described_class[D: 4, e: 5, &:upcase])
+
+        expect(tash.keys).to eql %i[D E]
+      end
+    end
+  end
+
   describe '#select' do
     context 'without a block' do
       it 'returns an enumerator' do

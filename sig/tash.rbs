@@ -126,6 +126,8 @@ module Tash
     def reject!: () { (K, V) -> boolish } -> self?
                | () -> Enumerator[[ K, V ], self?]
 
+    def replace: ((Tash | Hash)[K, V]) -> self
+
     def select: () { (K, V) -> boolish } -> Tash[K, V]
               | () -> Enumerator[[ K, V ], Tash[K, V]]
 
