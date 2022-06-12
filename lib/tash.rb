@@ -98,7 +98,6 @@ class Tash
     :shift,
     :size,
     :to_a,
-    :to_hash,
     :value?,
     :values
 
@@ -1053,10 +1052,12 @@ class Tash
   #
   #   @return [Array]
 
-  # @!method to_hash
-  #   Returns tash as a Hash.
+  # Returns tash as a Hash.
   #
-  #   @return [Hash]
+  # @return [Hash]
+  def to_hash
+    @ir.to_hash.dup
+  end
 
   # Returns the transform proc for `self`.
   #

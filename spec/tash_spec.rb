@@ -967,6 +967,26 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#to_hash' do
+    it 'returns a hash' do
+      expect(tash.to_hash).to be_a_kind_of Hash
+    end
+
+    it 'copies the contents' do
+      tash[:A] = 1
+      tash[:b] = 2
+
+      expect(tash.to_hash).to eql({ a: 1, b: 2 })
+    end
+
+    it 'does not return the internal hash' do
+      h = tash.to_hash
+      h[:a] = 1
+
+      expect(tash).to be_empty
+    end
+  end
+
   describe '#transform_proc' do
     it 'returns nil when there is none' do
       expect(described_class.new.transform_proc).to be_nil
