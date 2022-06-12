@@ -32,7 +32,7 @@ RSpec.describe Tash do
           expect(tash2).to_not be tash
         end
 
-        it "copies over the transformation strategy from the provided #{described_class}" do
+        it "copies over the transform strategy from the provided #{described_class}" do
           tash[:A] = 1
           tash[:b] = 2
 
@@ -661,7 +661,7 @@ RSpec.describe Tash do
   end
 
   describe '#invert' do
-    it 'flips the keys and values while running the values through the transformation' do
+    it 'flips the keys and values while running the values through the transform' do
       tash[:a] = 'A'
       tash[:b] = 'B'
 
@@ -720,7 +720,7 @@ RSpec.describe Tash do
         expect(tash2).to_not be tash
       end
 
-      it 'copies over the transformation strategy' do
+      it 'copies over the transform strategy' do
         tash[:A] = 1
         tash[:b] = 2
 
@@ -898,7 +898,7 @@ RSpec.describe Tash do
         expect(tash[:e]).to be 5
       end
 
-      it 'replaces the transformation block' do
+      it 'replaces the transform block' do
         tash[:A] = 1
         tash[:b] = 2
         tash[:c] = 3

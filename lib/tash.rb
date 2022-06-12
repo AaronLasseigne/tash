@@ -16,8 +16,8 @@ class Tash
 
   # Returns a new Tash object populated with the given objects, if any. If
   # a Tash is passed with no block it returns a duplicate with the
-  # transformation block from the original. If a Tash is passed with a block
-  # it is treated as a Hash.
+  # transform block from the original. If a Tash is passed with a block it is
+  # treated as a Hash.
   #
   # @example Empty
   #   Tash[] # => {}
@@ -37,29 +37,29 @@ class Tash
   # @param *objects [Array<Objects>] A Tash, Hash, or even number of objects
   #
   # @return [Tash]
-  def self.[](*objects, &transformation) # rubocop:disable Metrics/PerceivedComplexity
+  def self.[](*objects, &transform) # rubocop:disable Metrics/PerceivedComplexity
     if objects.empty?
-      new(&transformation)
-    elsif objects.size == 1 && !transformation && objects.first.is_a?(self)
+      new(&transform)
+    elsif objects.size == 1 && !transform && objects.first.is_a?(self)
       objects.first.dup
     elsif objects.size == 1 && objects.first.respond_to?(:to_hash)
-      from_hash(objects.first.to_hash, &transformation)
+      from_hash(objects.first.to_hash, &transform)
     elsif objects.size.even?
-      from_array(objects, &transformation)
+      from_array(objects, &transform)
     else
       raise ArgumentError, "odd number of arguments for #{name}"
     end
   end
 
-  def self.from_hash(hash, &transformation)
-    hash.each_with_object(new(&transformation)) do |(k, v), tash|
+  def self.from_hash(hash, &transform)
+    hash.each_with_object(new(&transform)) do |(k, v), tash|
       tash[k] = v
     end
   end
   private_class_method :from_hash
 
-  def self.from_array(array, &transformation)
-    array.each_slice(2).with_object(new(&transformation)) do |(k, v), tash|
+  def self.from_array(array, &transform)
+    array.each_slice(2).with_object(new(&transform)) do |(k, v), tash|
       tash[k] = v
     end
   end
@@ -70,12 +70,12 @@ class Tash
   # @example
   #   Tash.new { |key| key.to_s.downcase }
   #
-  # @param transformation [Proc] receives a key and transforms it as desired
+  # @param transform [Proc] receives a key and transforms it as desired
   #   before using the key
   #
   # @return [Tash]
-  def initialize(&transformation)
-    @transformation = transformation
+  def initialize(&transform)
+    @transform = transform
     @ir = {} # internal representation - @ir[transformed key] = value
     @default_proc = nil
   end
@@ -566,8 +566,8 @@ class Tash
   end
 
   # Returns a new Tash excluding entries for the given `keys`. Any given keys
-  # that are not found are ignored. The transformation proc is copied to the
-  # new Tash.
+  # that are not found are ignored. The transform proc is copied to the new
+  # Tash.
   #
   # @example
   #   t = Tash[a: 100, b: 200, c: 300]
@@ -942,7 +942,7 @@ class Tash
   end
 
   # Replaces the entire contents of `self` with the contents of `other`. If
-  # `other` is a tash it also replaces the transformation block.
+  # `other` is a tash it also replaces the transform block.
   #
   # @example With a hash
   #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
@@ -958,7 +958,7 @@ class Tash
   def replace(other)
     if other.is_a?(self.class)
       @ir.replace(other.to_hash)
-      @transformation = other.transform_proc
+      @transform = other.transform_proc
     else
       @ir.replace(other.to_hash.transform_keys { |k| transform(k) })
     end
@@ -1055,7 +1055,7 @@ class Tash
   #
   # @return [Proc or nil]
   def transform_proc
-    @transformation
+    @transform
   end
 
   # @!method value?
@@ -1081,13 +1081,13 @@ class Tash
   private
 
   def transform(key)
-    return key unless @transformation
+    return key unless @transform
 
-    @transformation.call(key)
+    @transform.call(key)
   end
 
   def new_from_self(new_ir)
-    self.class.new(&@transformation).tap { |tash| tash.ir = new_ir }
+    self.class.new(&@transform).tap { |tash| tash.ir = new_ir }
   end
 
   def current_ruby_version
