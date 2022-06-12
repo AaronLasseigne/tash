@@ -144,6 +144,9 @@ module Tash
 
     def to_a: () -> Array[[ K, V ]]
 
+    def to_h: () -> Hash[K, V]
+            | [A, B] () { (K, V) -> [ A, B ] } -> Hash[A, B]
+
     def to_hash: () -> Hash[K, V]
 
     def transform_proc: () -> (Proc | nil)

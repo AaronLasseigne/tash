@@ -967,6 +967,44 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#to_h' do
+    context 'without a block' do
+      it 'returns a hash' do
+        expect(tash.to_h).to be_a_kind_of Hash
+      end
+
+      it 'copies the contents' do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        expect(tash.to_h).to eql({ a: 1, b: 2 })
+      end
+
+      it 'does not return the internal hash' do
+        h = tash.to_h
+        h[:a] = 1
+
+        expect(tash).to be_empty
+      end
+    end
+
+    context 'with a block' do
+      it 'returns a hash based on the block' do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        expect(tash.to_h { |k, v| [v, k] }).to eql({ 1 => :a, 2 => :b })
+      end
+
+      it 'does not return the internal hash' do
+        h = tash.to_h { |k, v| [v, k] }
+        h[:c] = 3
+
+        expect(tash).to be_empty
+      end
+    end
+  end
+
   describe '#to_hash' do
     it 'returns a hash' do
       expect(tash.to_hash).to be_a_kind_of Hash

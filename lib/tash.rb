@@ -1052,11 +1052,32 @@ class Tash
   #
   #   @return [Array]
 
+  # Returns a Hash containing the content of `self`. When a block is given,
+  # returns a Hash object whose content is based on the block; the block should
+  # return a 2-element Array object specifying the key-value pair to be
+  # included in the returned Array.
+  #
+  # @example
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   h1 = t.to_h { |key, value| [value, key] }
+  #   h1 # => {0=>:foo, 1=>:bar, 2=>:baz}
+  #
+  # @param block [Proc]
+  #
+  # @return [Hash]
+  def to_h(&block)
+    if block
+      @ir.to_h(&block)
+    else
+      to_hash
+    end
+  end
+
   # Returns tash as a Hash.
   #
   # @return [Hash]
   def to_hash
-    @ir.to_hash.dup
+    @ir.dup
   end
 
   # Returns the transform proc for `self`.
