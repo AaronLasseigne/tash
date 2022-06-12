@@ -1029,6 +1029,20 @@ class Tash
   #
   #   @return [Integer]
 
+  # Returns a new Tash object containing the entries for the given transformed
+  # `keys`. Any given `keys` that are not found are ignored.
+  #
+  # @example
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.slice(:BAZ, :foo) # => {:baz=>2, :foo=>0}
+  #
+  # @param *keys [Array<Object>]
+  #
+  # @return [Tash]
+  def slice(*keys)
+    new_from_self(@ir.slice(*keys.map { |k| transform(k) }))
+  end
+
   # @!method to_a
   #   Returns a new Array of 2-element Array objects; each nested Array
   #   contains a key-value pair from `self`.

@@ -138,6 +138,8 @@ module Tash
 
     alias size length
 
+    def slice: (*K) -> Tash[K, V]
+
     alias store []=
 
     def to_a: () -> Array[[ K, V ]]

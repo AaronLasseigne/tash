@@ -954,6 +954,19 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#slice' do
+    it 'returns a new Tash containing the selected keys' do
+      tash[:A] = 1
+      tash[:b] = 2
+      tash[:C] = 3
+
+      result = tash.slice(:B, :c)
+
+      expect(result).to be_a_kind_of described_class
+      expect(result).to eq described_class[b: 2, c: 3]
+    end
+  end
+
   describe '#transform_proc' do
     it 'returns nil when there is none' do
       expect(described_class.new.transform_proc).to be_nil
