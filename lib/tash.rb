@@ -606,7 +606,11 @@ class Tash
   #
   # @raise [KeyError] When `key` is not found and no default is provided.
   def fetch(key, *default_value, &block)
-    @ir.fetch(transform(key), *default_value, &block)
+    if block
+      @ir.fetch(transform(key), &block)
+    else
+      @ir.fetch(transform(key), *default_value)
+    end
   end
 
   # Returns a new Array containing the values associated with the given keys
