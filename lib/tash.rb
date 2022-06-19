@@ -103,6 +103,7 @@ class Tash
 
   alias has_value? value?
   alias length size
+  alias to_s inspect
 
   # @!method < other
   #   Returns `true` if tash is a proper subset of other, `false` otherwise.
