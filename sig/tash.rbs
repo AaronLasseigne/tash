@@ -87,7 +87,7 @@ module Tash
 
     alias has_key? key?
 
-    def has_value?: (V) -> bool
+    alias has_value? value?
 
     def hash: () -> Integer
 
@@ -106,7 +106,7 @@ module Tash
 
     def keys: () -> Array[K]
 
-    def length: () -> Integer
+    alias length size
 
     alias member? has_key?
 
@@ -136,7 +136,7 @@ module Tash
 
     def shift: () -> [ K, V ]?
 
-    alias size length
+    def size: () -> Integer
 
     def slice: (*K) -> Tash[K, V]
 
@@ -156,6 +156,8 @@ module Tash
     def transform_proc: () -> (Proc | nil)
 
     alias update merge!
+
+    def value?: (V) -> bool
 
     def values: () -> Array[V]
 
