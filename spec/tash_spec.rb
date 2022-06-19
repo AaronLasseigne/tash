@@ -1025,6 +1025,34 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#to_proc' do
+    it 'returns a lambda' do
+      expect(tash.to_proc).to be_a_kind_of Proc
+      expect(tash.to_proc).to be_lambda
+    end
+
+    it 'maps a transformed key to its value' do
+      tash[:A] = 1
+      tash[:b] = 2
+
+      p = tash.to_proc
+
+      expect(p.call(:a)).to be 1
+      expect(p.call(:B)).to be 2
+      expect(p.call(:c)).to be_nil
+    end
+
+    it 'uses the original hash' do
+      p = tash.to_proc
+
+      expect(p.call(:a)).to be_nil
+
+      tash[:a] = 1
+
+      expect(p.call(:a)).to be 1
+    end
+  end
+
   describe '#transform_proc' do
     it 'returns nil when there is none' do
       expect(described_class.new.transform_proc).to be_nil

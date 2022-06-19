@@ -1084,6 +1084,24 @@ class Tash
     @ir.dup
   end
 
+  # Returns a Proc object that maps a key to its value.
+  #
+  # @example
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   proc = t.to_proc
+  #   proc.class # => Proc
+  #   proc.call(:foo) # => 0
+  #   proc.call(:BAR) # => 1
+  #   proc.call(:nosuch) # => nil
+  #
+  # @return [Proc]
+  def to_proc
+    p = @ir.to_proc
+    lambda do |key|
+      p.call(transform(key))
+    end
+  end
+
   # Returns the transform proc for `self`.
   #
   # @example

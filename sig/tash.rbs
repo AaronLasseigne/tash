@@ -149,6 +149,8 @@ module Tash
 
     def to_hash: () -> Hash[K, V]
 
+    def to_proc: () -> ^(K) -> V?
+
     def transform_proc: () -> (Proc | nil)
 
     alias update merge!
