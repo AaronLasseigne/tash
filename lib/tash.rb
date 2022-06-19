@@ -424,7 +424,7 @@ class Tash
   #
   # @return [Enumerator, self]
   def delete_if(&block)
-    return to_enum(:delete_if) unless block
+    return to_enum(__method__) unless block
 
     @ir.delete_if(&block)
     self
@@ -478,7 +478,7 @@ class Tash
   #
   # @return [Enumerator, self]
   def each(&block)
-    return to_enum(:each) unless block
+    return to_enum(__method__) unless block
 
     @ir.each(&block)
     self
@@ -502,7 +502,7 @@ class Tash
   #
   # @return [Enumerator, self]
   def each_key(&block)
-    return to_enum(:each_key) unless block
+    return to_enum(__method__) unless block
 
     @ir.each_key(&block)
     self
@@ -525,7 +525,7 @@ class Tash
   #
   # @return [Enumerator, self]
   def each_value(&block)
-    return to_enum(:each_value) unless block
+    return to_enum(__method__) unless block
 
     @ir.each_value(&block)
     self
@@ -718,7 +718,7 @@ class Tash
   #
   # @return [Enumerator, self]
   def keep_if(&block)
-    return to_enum(:keep_if) unless block
+    return to_enum(__method__) unless block
 
     @ir.keep_if(&block)
     self
@@ -918,7 +918,7 @@ class Tash
   #
   # @return [Enumerator, Tash]
   def reject(&block)
-    return to_enum(:reject) unless block
+    return to_enum(__method__) unless block
 
     new_from_self(@ir.reject(&block))
   end
@@ -939,7 +939,7 @@ class Tash
   #
   # @return [Enumerator, self or nil]
   def reject!(&block)
-    return to_enum(:reject!) unless block
+    return to_enum(__method__) unless block
 
     self if @ir.reject!(&block)
   end
@@ -985,7 +985,7 @@ class Tash
   #
   # @return [Enumerator, Tash]
   def select(&block)
-    return to_enum(:select) unless block
+    return to_enum(__method__) unless block
 
     new_from_self(@ir.select(&block))
   end
@@ -1007,7 +1007,7 @@ class Tash
   #
   # @return [Enumerator, self or nil]
   def select!(&block)
-    return to_enum(:select!) unless block
+    return to_enum(__method__) unless block
 
     self if @ir.select!(&block)
   end
