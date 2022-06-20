@@ -155,6 +155,9 @@ module Tash
 
     def transform_proc: () -> (Proc | nil)
 
+    def transform_values: () -> Enumerator[V, Tash[K, untyped]]
+                        | [A] () { (V) -> A } -> Tash[K, A]
+
     alias update merge!
 
     def value?: (V) -> bool

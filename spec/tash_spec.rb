@@ -1059,10 +1059,30 @@ RSpec.describe Tash do
     end
 
     it 'returns the proc when there is one' do
-      prok = proc { |k| k.to_s }
-      tash = described_class.new(&prok)
+      p = proc { |k| k.to_s }
+      tash = described_class.new(&p)
 
-      expect(tash.transform_proc).to be prok
+      expect(tash.transform_proc).to be p
+    end
+  end
+
+  describe '#transform_values' do
+    context 'without a block' do
+      it 'returns an enumerator' do
+        expect(tash.transform_values).to be_a_kind_of Enumerator
+      end
+    end
+
+    context 'with a block' do
+      it "transforms the values and returns a new #{described_class}" do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        result = tash.transform_values { |v| v * 100 }
+
+        expect(result).to be_a_kind_of described_class
+        expect(result).to eq described_class[a: 100, b: 200]
+      end
     end
   end
 end
