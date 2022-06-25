@@ -1174,7 +1174,20 @@ class Tash
   #
   #   @return [Array]
 
-  # Without this comment, the last entry (i.e. #values) will not show up in the docs.
+  # Returns a new Array containing values for the given transformed `keys`. The
+  # default values are returned for any keys that are not found.
+  #
+  # @example
+  #   t = Tash[foo: 0, bar: 1, baz: 2]
+  #   t.values_at(:baz, :FOO) # => [2, 0]
+  #
+  # @example keys not found
+  #   t.values_at(:hello, :foo) # => [nil, 0]
+  #
+  # @return [Array]
+  def values_at(*keys)
+    @ir.values_at(*keys.map { |k| transform(k) })
+  end
 
   protected
 

@@ -1105,4 +1105,16 @@ RSpec.describe Tash do
       end
     end
   end
+
+  describe '#values_at' do
+    it 'returns a new Tash containing the selected keys' do
+      tash[:A] = 1
+      tash[:b] = 2
+      tash[:C] = 3
+
+      result = tash.values_at(:B, :c, :d)
+
+      expect(result).to eq [2, 3, nil]
+    end
+  end
 end

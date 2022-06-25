@@ -167,6 +167,8 @@ module Tash
 
     def values: () -> Array[V]
 
+    def values_at: (*K) -> Array[V?]
+
     private
 
     def initialize: () { (K) -> unchecked out K } -> void
