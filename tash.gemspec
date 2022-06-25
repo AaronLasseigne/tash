@@ -28,7 +28,7 @@ Gem::Specification.new do |spec|
   spec.required_ruby_version = '>= 2.7.0'
 
   spec.files =
-    %w[CHANGELOG.md CONTRIBUTING.md LICENSE.md README.md] +
+    %w[CHANGELOG.md CONTRIBUTING.md LICENSE.txt README.md] +
     Dir.glob(File.join('lib', '**', '*.rb')) +
     Dir.glob(File.join('sig', '*.rbs'))
   spec.test_files = Dir.glob(File.join('spec', '**', '*.rb'))
