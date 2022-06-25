@@ -158,6 +158,9 @@ module Tash
     def transform_values: () -> Enumerator[V, Tash[K, untyped]]
                         | [A] () { (V) -> A } -> Tash[K, A]
 
+    def transform_values!: () -> Enumerator[V, self]
+                         | () { (V) -> V } -> self
+
     alias update merge!
 
     def value?: (V) -> bool

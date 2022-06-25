@@ -918,7 +918,7 @@ RSpec.describe Tash do
     end
 
     context 'with a block' do
-      it "select the #{described_class} and returns a new one" do
+      it "selects key-value pairs from self and returns a new #{described_class}" do
         tash[:A] = 1
         tash[:b] = 2
 
@@ -942,7 +942,7 @@ RSpec.describe Tash do
         expect(tash.select! { true }).to be_nil
       end
 
-      it "select the #{described_class} and returns a new one" do
+      it 'selects key-value pairs from self and returns self' do
         tash[:A] = 1
         tash[:b] = 2
 
@@ -1081,6 +1081,26 @@ RSpec.describe Tash do
         result = tash.transform_values { |v| v * 100 }
 
         expect(result).to be_a_kind_of described_class
+        expect(result).to eq described_class[a: 100, b: 200]
+      end
+    end
+  end
+
+  describe '#transform_values!' do
+    context 'without a block' do
+      it 'returns an enumerator' do
+        expect(tash.transform_values!).to be_a_kind_of Enumerator
+      end
+    end
+
+    context 'with a block' do
+      it 'transforms the values and returns self' do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        result = tash.transform_values! { |v| v * 100 }
+
+        expect(result).to be tash
         expect(result).to eq described_class[a: 100, b: 200]
       end
     end

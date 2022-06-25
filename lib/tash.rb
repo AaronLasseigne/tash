@@ -1140,6 +1140,26 @@ class Tash
     new_from_self(@ir.transform_values(&block))
   end
 
+  # Returns `self`, whose keys are unchanged, and whose values are determined by
+  # the given block.
+  #
+  # @example Without a block
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   e = t.transform_values! # => #<Enumerator: {:foo=>0, :bar=>1, :baz=>2}:transform_values!>
+  #   t1 = e.each { |value| value * 100 }
+  #   t1 # => {:foo=>0, :bar=>100, :baz=>200}
+  #
+  # @example With a block
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   t.transform_values! { |value| value * 100 } # => {:foo=>0, :bar=>100, :baz=>200}
+  #
+  # @return [self]
+  def transform_values!(&block)
+    return to_enum(__method__) unless block
+
+    self if @ir.public_send(__method__, &block)
+  end
+
   # @!method value?
   #   Returns `true` if `value` is a value in `self`, otherwise `false`.
   #
