@@ -1,33 +1,112 @@
-# Tash
+# [Tash][]
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tash`. To experiment with that code, run `bin/console` for an interactive prompt.
+Tash is a hash that allows for transformation of its keys.
+A transformation block is given to change the key.
+Keys can be looked up with any value that transforms into the same key.
+This means a hash can be string/symbol insensitive, case insensitive, can convert camel case JSON keys to snake case Ruby keys, or anything else based on the block you provide.
 
-TODO: Delete this and the text above, and describe your gem
+[![Version](https://img.shields.io/gem/v/tash.svg?style=flat-square)](https://rubygems.org/gems/tash)
+[![Test](https://img.shields.io/github/workflow/status/AaronLasseigne/tash/Test?label=Test&style=flat-square)](https://github.com/AaronLasseigne/tash/actions?query=workflow%3ATest)
+
+---
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
+Add it to your Gemfile:
 
-    $ bundle add tash
+``` rb
+gem 'tash', '~> 0.1.0'
+```
 
-If bundler is not being used to manage dependencies, install the gem by executing:
+Or install it manually:
 
-    $ gem install tash
+``` sh
+$ gem install tash --version '~> 0.1.0'
+```
+
+This project uses [Semantic Versioning][].
+Check out [GitHub releases][] for a detailed list of changes.
 
 ## Usage
 
-TODO: Write usage instructions here
+Let's say that you wanted to have a hash where the keys are accessible as strings or symbols (i.e. `ActiveSupport::HashWithIndifferentAccess`).
 
-## Development
+``` rb
+t = Tash[one: 1, two: 2, &:to_s]
+# => {"one"=>1, "two"=>2}
 
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+t[:one]
+# => 1
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+t['one']
+# => 1
+
+t[:three] = 9 # oops
+# => 9
+
+t['three'] = 3
+# => 3
+
+t[:three]
+# => 3
+
+t['three']
+# => 3
+```
+
+Lets say that you recieve a series of camel case JSON keys from an API call but want to access the information with Rubys typical snake case style and symbolized.
+
+``` rb
+json = { "firstName" => "Adam", "lastName" => "DeCobray" }
+
+t = Tash[json] do |key|
+  key
+    .to_s
+    .gsub(/(?<!\A)([A-Z])/, '_\1')
+    .downcase
+    .to_sym
+end
+
+t[:first_name]
+# => "Adam"
+
+t['firstName']
+# => "Adam"
+```
+
+This also works with pattern matching:
+
+``` rb
+t = Tash[ONE: 1, MORE: 200, &:downcase]
+
+case t
+in { One: 1, More: more }
+  more
+else
+  nil
+end
+# => 200
+```
+
+Tash implements `to_hash` for implicit hash conversion making it usable nearly everywhere you use a hash.
+
+Tash has every instance method Hash has except for `transform_keys` and `transform_keys!`.
+
+[API Documentation][]
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/AaronLasseigne/tash.
+If you want to contribute to Tash, please read [our contribution guidelines][].
+A [complete list of contributors][] is available on GitHub.
 
 ## License
 
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+Tash is licensed under [the MIT License][].
+
+[Tash]: https://github.com/AaronLasseigne/tash
+[semantic versioning]: http://semver.org/spec/v2.0.0.html
+[GitHub releases]: https://github.com/AaronLasseigne/tash/releases
+[API Documentation]: http://rubydoc.info/github/AaronLasseigne/tash
+[our contribution guidelines]: CONTRIBUTING.md
+[complete list of contributors]: https://github.com/AaronLasseigne/tash/graphs/contributors
+[the mit license]: LICENSE.txt
