@@ -15,13 +15,13 @@ This means a hash can be string/symbol insensitive, case insensitive, can conver
 Add it to your Gemfile:
 
 ``` rb
-gem 'tash', '~> 0.1.0'
+gem 'tash', '~> 1.0'
 ```
 
 Or install it manually:
 
 ``` sh
-$ gem install tash --version '~> 0.1.0'
+$ gem install tash --version '~> 1.0'
 ```
 
 This project uses [Semantic Versioning][].
