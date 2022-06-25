@@ -37,6 +37,8 @@ module Tash
 
     def compare_by_identity?: () -> bool
 
+    def deconstruct_keys: (Array[K] | nil) -> self
+
     def default: (?K) -> V?
 
     def default=: (V) -> V

@@ -291,6 +291,34 @@ RSpec.describe Tash do
     end
   end
 
+  describe '#deconstruct_keys' do
+    context 'when given nil' do
+      it 'returns an empty hash' do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        expect(tash.deconstruct_keys(nil)).to eql({})
+      end
+    end
+
+    context 'when given keys' do
+      it 'transforms the keys' do
+        tash[:A] = 1
+        tash[:b] = 2
+
+        result =
+          case tash
+          in { A: a, B: 2 }
+            a
+          else
+            nil
+          end
+
+        expect(result).to eq tash[:a]
+      end
+    end
+  end
+
   describe '#default' do
     context 'without a key' do
       it 'returns the default value' do

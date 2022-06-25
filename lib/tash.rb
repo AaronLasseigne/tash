@@ -304,6 +304,25 @@ class Tash
   #
   #   @return [Boolean]
 
+  # Provides support for pattern matching using a Tash. Pattern keys will be
+  # transformed before matching.
+  #
+  # @example
+  #   t = Tash[Foo: 0, Bar: 1, Baz: 2, &:downcase]
+  #   case t
+  #   in { foo: x, BAR: 1 }
+  #     x
+  #   else
+  #     nil
+  #   end # => 0
+  #
+  # @return [Hash]
+  def deconstruct_keys(keys)
+    return {} if keys.nil?
+
+    keys.to_h { |key| [key, self[key]] }
+  end
+
   # @overload default
   # @overload default(key)
   #
