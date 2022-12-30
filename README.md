@@ -6,7 +6,7 @@ Keys can be looked up with any value that transforms into the same key.
 This means a hash can be string/symbol insensitive, case insensitive, can convert camel case JSON keys to snake case Ruby keys, or anything else based on the block you provide.
 
 [![Version](https://img.shields.io/gem/v/tash.svg?style=flat-square)](https://rubygems.org/gems/tash)
-[![Test](https://img.shields.io/github/workflow/status/AaronLasseigne/tash/Test?label=Test&style=flat-square)](https://github.com/AaronLasseigne/tash/actions?query=workflow%3ATest)
+[![Test](https://img.shields.io/github/actions/workflow/status/AaronLasseigne/tash/test.yml?label=Test&style=flat-square&branch=main)](https://github.com/AaronLasseigne/tash/actions?query=workflow%3ATest)
 
 ---
 
